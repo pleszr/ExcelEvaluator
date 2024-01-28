@@ -1,0 +1,19 @@
+<!DOCTYPE HTML>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <title>Excel uploaded successfully</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+<h1>Result</h1>
+<p th:text="'Id: ' + ${excelFile.id}" />
+<p th:text="'Version: ' + ${excelFile.version}" />
+<p th:text="'Definition Name: ' + ${excelFile.definitionName}" />
+<p th:text="'Location: ' + ${excelFile.brickName}" />
+<p th:text="'Attribute Name: ' + ${excelFile.attributeName}" />
+<p th:text="'Full Text Id Path: ' + ${excelFile.fullTextIdPath}" />
+<!-- Displaying the excelFile byte array directly in HTML is not practical, so it's omitted -->
+
+<a href="/web/uploadExcel">Submit another Excel File</a>
+</body>
+</html>
