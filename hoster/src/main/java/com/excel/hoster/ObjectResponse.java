@@ -3,16 +3,16 @@ package com.excel.hoster;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
-public class ExcelFileUploadResponse {
+public class ObjectResponse<ResponseObject> {
     private int responseStatus;
     private String responseDetail;
     private String responseTime;
-    private ExcelFile excelFile;
+    private ResponseObject responseObject;
 
-    public ExcelFileUploadResponse(int responseStatus, String responseDetail, ExcelFile excelFile) {
+    public ObjectResponse(int responseStatus, String responseDetail, ResponseObject responseObject) {
         this.responseStatus = responseStatus;
         this.responseDetail = responseDetail;
-        this.excelFile = excelFile;
+        this.responseObject = responseObject;
         this.responseTime = ZonedDateTime.now().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
     }
 
@@ -28,7 +28,7 @@ public class ExcelFileUploadResponse {
         return responseTime;
     }
 
-    public ExcelFile getExcelFile() {
-        return excelFile;
+    public ResponseObject getResponseObject() {
+        return responseObject;
     }
 }

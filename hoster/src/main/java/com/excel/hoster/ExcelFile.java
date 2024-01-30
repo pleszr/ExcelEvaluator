@@ -12,11 +12,6 @@ import java.util.UUID;
 @Entity
 public class ExcelFile {
 
-
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
     private String version;
     @NotBlank(message = "definitionName is mandatory")
     private String definitionName;
@@ -26,7 +21,8 @@ public class ExcelFile {
     private String attributeName;
     @NotBlank(message = "file name is mandatory")
     private String fileName;
-    private String fullTextIdPath;
+    @Id
+    private String fullTextId;
     @JsonIgnore
     private byte[] excelFile;
 
@@ -37,15 +33,13 @@ public class ExcelFile {
         this.attributeName = attributeName;
         this.excelFile = excelFile;
         this.fileName = fileName;
-        this.fullTextIdPath = definitionName + "." +  location + "." + attributeName;
+        version = UUID.randomUUID().toString();
+        this.fullTextId = definitionName + "." +  brickName + "." + attributeName;
     }
 
     public ExcelFile() {
         version = UUID.randomUUID().toString();
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
+        fullTextId = definitionName + "." +  brickName + "." + attributeName;
     }
 
     public void setVersion(String version) {
@@ -63,8 +57,8 @@ public class ExcelFile {
         this.attributeName = attributeName;
     }
 
-    public void setFullTextIdPath(String fullTextIdPath) {
-        this.fullTextIdPath = fullTextIdPath;
+    public void setFullTextId(String fullTextIdPath) {
+        this.fullTextId = fullTextIdPath;
     }
 
 
@@ -78,20 +72,15 @@ public class ExcelFile {
     @PrePersist
     @PreUpdate
     private void saveOrUpdate() {
-        setFullTextIdPath();
         setVersion();
     }
 
     private void setFullTextIdPath() {
-        fullTextIdPath = definitionName + "." + brickName + "." + attributeName;
+        fullTextId = definitionName + "." + brickName + "." + attributeName;
     }
 
     private void setVersion() {
         version = UUID.randomUUID().toString();
-    }
-
-    public Integer getId() {
-        return id;
     }
 
     public String getVersion() {
@@ -110,8 +99,8 @@ public class ExcelFile {
         return attributeName;
     }
 
-    public String getFullTextIdPath() {
-        return fullTextIdPath;
+    public String getFullTextId() {
+        return fullTextId;
     }
 
     public byte[] getExcelFile() {
