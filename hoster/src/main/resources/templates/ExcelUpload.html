@@ -8,11 +8,11 @@
 <h1>Form</h1>
 
 
-<form action="#" th:action="@{/uploadExcel}" th:object="${excelFileDTO}" method="post" enctype="multipart/form-data">
+<form action="#" th:action="@{/web/uploadExcel}" th:object="${excelFileDTO}" method="post" enctype="multipart/form-data">
     <p>Definition Name: <input type="text" th:field="*{definitionName}" /></p>
-    <p>Excel Location: <input type="text" th:field="*{brickName}" /></p>
-    <p>Excel attribute name: <input type="text" th:field="*{attributeName}" /></p>
-    <p>File: <input type="file" name="file" /></p>
+    <p>Brick Name: <input type="text" th:field="*{brickName}" /></p>
+    <p>Attribute name: <input type="text" th:field="*{attributeName}" /></p>
+    <p>Excel File: <input type="file" name="file" /></p>
     <p><input type="submit" value="Submit" /></p>
 </form>
 </body>

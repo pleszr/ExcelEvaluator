@@ -1,6 +1,10 @@
-package com.excel.hoster;
+package com.excel.hoster.controller;
 
 
+import com.excel.hoster.excelfile.ExcelFile;
+import com.excel.hoster.excelfile.ExcelFileDTO;
+import com.excel.hoster.excelfile.ExcelFileService;
+import com.excel.hoster.excelfile.ExcelRepository;
 import jakarta.validation.Valid;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -26,6 +30,7 @@ public class ExposeExcelController {
     private static final Logger logger = LogManager.getLogger(UploadExcelControllerApi.class);
     @Value("${apache.poi.version}")
     private String apachePoiVersion;
+
     @Autowired
     private ExcelFileService excelFileService;
 
@@ -51,7 +56,7 @@ public class ExposeExcelController {
             return ResponseEntity.badRequest().body(response);
         }
 
-        ObjectResponse<ExcelFile> response = new ObjectResponse<>(HttpStatus.OK.value(), "Apache POI version successfully requested",excelFile);
+        ObjectResponse<ExcelFile> response = new ObjectResponse<>(HttpStatus.OK.value(), "Excel version successfully requested",excelFile);
         return ResponseEntity.ok(response);
     }
 

@@ -1,6 +1,11 @@
-package com.excel.hoster;
+package com.excel.hoster.controller;
 
 
+import com.excel.hoster.excelfile.ExcelFile;
+import com.excel.hoster.excelfile.ExcelFileDTO;
+import com.excel.hoster.excelfile.ExcelFileService;
+import com.excel.hoster.excelfile.ExcelRepository;
+import com.excel.hoster.exception.MissingFieldException;
 import jakarta.validation.Valid;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -30,6 +35,10 @@ public class UploadExcelControllerApi {
 
     @PostMapping("/uploadExcel")
     public ResponseEntity<?> uploadExcelSubmit(@Valid @ModelAttribute ExcelFileDTO excelFileDTO, @RequestParam(name="file",required = false) MultipartFile file, BindingResult bindingResult, Model model) throws IOException {
+
+
+
+        ExcelFileService.validateExcel(bindingResult, file);
 
         if (bindingResult.hasErrors()) {
             return ResponseEntity.badRequest().body(bindingResult.getAllErrors());

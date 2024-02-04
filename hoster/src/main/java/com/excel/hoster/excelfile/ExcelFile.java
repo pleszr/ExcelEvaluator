@@ -1,4 +1,4 @@
-package com.excel.hoster;
+package com.excel.hoster.excelfile;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -15,21 +15,23 @@ public class ExcelFile {
     private String version;
     @NotBlank(message = "definitionName is mandatory")
     private String definitionName;
-    @NotBlank(message = "location name is mandatory")
-    private String brickName;
     @NotBlank(message = "brickName is mandatory")
+    private String brickName;
+    @NotBlank(message = "attributeName is mandatory")
     private String attributeName;
     @NotBlank(message = "file name is mandatory")
     private String fileName;
     @Id
     private String fullTextId;
     @JsonIgnore
+    @Lob
+    @Column(name="ExcelFile", nullable=false, columnDefinition="blob")
     private byte[] excelFile;
 
-    public ExcelFile(String definitionName, String location, String attributeName, String fileName, byte[] excelFile) {
+    public ExcelFile(String definitionName, String brickName, String attributeName, String fileName, byte[] excelFile) {
         this.version = version;
         this.definitionName = definitionName;
-        this.brickName = location;
+        this.brickName = brickName;
         this.attributeName = attributeName;
         this.excelFile = excelFile;
         this.fileName = fileName;

@@ -1,15 +1,14 @@
-package com.excel.hoster;
+package com.excel.hoster.excelfile;
 
 import jakarta.validation.constraints.NotBlank;
 
 public class ExcelFileDTO {
-    @NotBlank(message = "Definition name is mandatory")
+    @NotBlank(message = "definitionName is mandatory")
     private String definitionName;
-    @NotBlank(message = "Brick name is mandatory")
+    @NotBlank(message = "brickName is mandatory")
     private String brickName;
-    @NotBlank(message = "Attribute name is mandatory")
+    @NotBlank(message = "attributeName is mandatory")
     private String attributeName;
-    //@NotNull(message = "Excel file is mandatory")
     private byte[] excelFile;
 
     public ExcelFileDTO() {

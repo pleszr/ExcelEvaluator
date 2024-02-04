@@ -1,4 +1,4 @@
-package com.excel.exception;
+package com.excel.hoster.exception;
 
 
 import org.springframework.http.HttpStatus;
