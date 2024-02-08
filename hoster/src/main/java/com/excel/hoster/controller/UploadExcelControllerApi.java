@@ -36,8 +36,6 @@ public class UploadExcelControllerApi {
     @PostMapping("/uploadExcel")
     public ResponseEntity<?> uploadExcelSubmit(@Valid @ModelAttribute ExcelFileDTO excelFileDTO, @RequestParam(name="file",required = false) MultipartFile file, BindingResult bindingResult, Model model) throws IOException {
 
-
-
         ExcelFileService.validateExcel(bindingResult, file);
 
         if (bindingResult.hasErrors()) {

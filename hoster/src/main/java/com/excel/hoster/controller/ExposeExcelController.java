@@ -2,22 +2,19 @@ package com.excel.hoster.controller;
 
 
 import com.excel.hoster.excelfile.ExcelFile;
-import com.excel.hoster.excelfile.ExcelFileDTO;
 import com.excel.hoster.excelfile.ExcelFileService;
 import com.excel.hoster.excelfile.ExcelRepository;
-import jakarta.validation.Valid;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -49,31 +46,42 @@ public class ExposeExcelController {
 
     @GetMapping("/getExcelVersion")
     public ResponseEntity<?> getExcelVersion(@RequestParam(name="fullTextId",required = true) String fullTextId) {
-        ExcelFile excelFile = excelFileService.getExcelVersion(fullTextId);
+
+        ExcelFile excelFile = excelFileService.getExcelFileByFullTextId(fullTextId);
 
         if (excelFile ==null) {
             ObjectResponse<String> response = new ObjectResponse<>(HttpStatus.NOT_FOUND.value(), "No Excel found with fullTextId: " + fullTextId,null);
-            return ResponseEntity.badRequest().body(response);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         }
 
         ObjectResponse<ExcelFile> response = new ObjectResponse<>(HttpStatus.OK.value(), "Excel version successfully requested",excelFile);
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/old")
-    public ResponseEntity<?> uploadExcelSubmit(@Valid @ModelAttribute ExcelFileDTO excelFileDTO, @RequestParam(name="file",required = false) MultipartFile file, BindingResult bindingResult, Model model) throws IOException {
+    @GetMapping("/getExcelFile")
+    public ResponseEntity<?> getExcelFile(@RequestParam(name = "fullTextId", required = true) String fullTextId) {
 
-        if (bindingResult.hasErrors()) {
-            return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
+        ExcelFile excelFile = excelFileService.getExcelFileByFullTextId(fullTextId);
+
+        if (excelFile ==null) {
+            ObjectResponse<String> response = new ObjectResponse<>(HttpStatus.NOT_FOUND.value(), "No Excel found with fullTextId: " + fullTextId,null);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         }
 
-        ExcelFile excelFile = new ExcelFile(excelFileDTO.getDefinitionName(), excelFileDTO.getBrickName(), excelFileDTO.getAttributeName(),file.getOriginalFilename(), file.getBytes());
-        excelRepository.save(excelFile);
+        byte[] excelFileByteArray = excelFile.getExcelFile();
 
-        ObjectResponse<ExcelFile> response = new ObjectResponse<>(HttpStatus.OK.value(), "Excel file uploaded successfully", excelFile);
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add(HttpHeaders.CONTENT_DISPOSITION,"attachment; filename=\"" + excelFile.getFileName() + "\"");
 
-        return ResponseEntity.ok(response);
+        ByteArrayResource byteArrayResource = new ByteArrayResource(excelFileByteArray);
+
+        return ResponseEntity.ok()
+                .headers(httpHeaders)
+                .contentLength(excelFileByteArray.length)
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .body(byteArrayResource);
     }
+
 
 
 

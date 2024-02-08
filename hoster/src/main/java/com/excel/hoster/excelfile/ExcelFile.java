@@ -109,5 +109,7 @@ public class ExcelFile {
         return excelFile;
     }
 
-
+    public String getFileName() {
+        return fileName;
+    }
 }

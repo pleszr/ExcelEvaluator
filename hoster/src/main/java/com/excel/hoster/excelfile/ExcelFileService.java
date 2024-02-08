@@ -51,7 +51,7 @@ public class ExcelFileService {
         }
     }
 
-    public ExcelFile getExcelVersion(String fullTextId) {
+    public ExcelFile getExcelFileByFullTextId(String fullTextId) {
         Optional<ExcelFile> excelFile = excelRepository.findById(fullTextId);
         return excelFile.orElse(null);
     }
