@@ -1,9 +1,9 @@
 package com.excel.hoster.controller;
 
-import com.excel.hoster.excelfile.ExcelFile;
+import com.excel.hoster.repository.entity.ExcelFile;
 import com.excel.hoster.excelfile.ExcelFileDTO;
-import com.excel.hoster.excelfile.ExcelFileService;
-import com.excel.hoster.excelfile.ExcelRepository;
+import com.excel.hoster.service.ExcelFileService;
+import com.excel.hoster.repository.ExcelRepository;
 import jakarta.validation.Valid;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

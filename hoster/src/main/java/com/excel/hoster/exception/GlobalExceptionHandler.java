@@ -65,6 +65,14 @@ public class GlobalExceptionHandler {
         return problemDetail;
     }
 
+    @ExceptionHandler(HosterException.class)
+    ProblemDetail handleHosterException(HosterException hosterException) {
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, hosterException.getMessage());
+        problemDetail.setTitle("Hoster error");
+        problemDetail.setProperty("exceptionId", exceptionId);
+        return problemDetail;
+    }
+
 
 
 

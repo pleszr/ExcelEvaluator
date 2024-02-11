@@ -1,9 +1,9 @@
 package com.excel.hoster.controller;
 
 
-import com.excel.hoster.excelfile.ExcelFile;
-import com.excel.hoster.excelfile.ExcelFileService;
-import com.excel.hoster.excelfile.ExcelRepository;
+import com.excel.hoster.repository.entity.ExcelFile;
+import com.excel.hoster.service.ExcelFileService;
+import com.excel.hoster.repository.ExcelRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,21 +20,16 @@ import java.util.Map;
 
 
 @RestController
-@RequestMapping("/api")
-public class ExposeExcelController {
+@RequestMapping("/api/version")
+public class VersionController {
 
-    private final ExcelRepository excelRepository;
+    @Autowired
+    private ExcelRepository excelRepository;
+    @Autowired
+    private ExcelFileService excelFileService;
     private static final Logger logger = LogManager.getLogger(UploadExcelControllerApi.class);
     @Value("${apache.poi.version}")
     private String apachePoiVersion;
-
-    @Autowired
-    private ExcelFileService excelFileService;
-
-    @Autowired
-    public ExposeExcelController(ExcelRepository excelRepository) {
-        this.excelRepository = excelRepository;
-    }
 
     @GetMapping("/getApachePoiVersion")
     public ResponseEntity<?> getApachePoiVersion(){
@@ -82,7 +77,15 @@ public class ExposeExcelController {
                 .body(byteArrayResource);
     }
 
-
+/*
+    /api
+        /version
+            /getApachePoiVersion
+            /getExcelVersion
+            /getExcelFile
+       /upload
+            /uploadExcel
+ */
 
 
 

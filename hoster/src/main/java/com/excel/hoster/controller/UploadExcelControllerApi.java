@@ -1,11 +1,12 @@
 package com.excel.hoster.controller;
 
 
-import com.excel.hoster.excelfile.ExcelFile;
+import com.excel.hoster.exception.ErrorCode;
+import com.excel.hoster.exception.HosterException;
+import com.excel.hoster.repository.entity.ExcelFile;
 import com.excel.hoster.excelfile.ExcelFileDTO;
-import com.excel.hoster.excelfile.ExcelFileService;
-import com.excel.hoster.excelfile.ExcelRepository;
-import com.excel.hoster.exception.MissingFieldException;
+import com.excel.hoster.service.ExcelFileService;
+import com.excel.hoster.repository.ExcelRepository;
 import jakarta.validation.Valid;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -34,7 +35,13 @@ public class UploadExcelControllerApi {
     }
 
     @PostMapping("/uploadExcel")
-    public ResponseEntity<?> uploadExcelSubmit(@Valid @ModelAttribute ExcelFileDTO excelFileDTO, @RequestParam(name="file",required = false) MultipartFile file, BindingResult bindingResult, Model model) throws IOException {
+    public ResponseEntity<ExcelFile> uploadExcelSubmit(
+            @Valid @ModelAttribute ExcelFileDTO excelFileDTO,
+            @RequestParam(name="file",required = false) Resource file,
+            BindingResult bindingResult,
+            Model model
+    ) throws IOException {
+        excelfileRequestValidatorService.validateExcel(bindingResult, file);
 
         ExcelFileService.validateExcel(bindingResult, file);
 
@@ -50,8 +57,58 @@ public class UploadExcelControllerApi {
         return ResponseEntity.ok(response);
     }
 
+    @PostMapping("/userCreation")
+    public ResponseEntity<UserResponseApiModel> upload(
+            @RequestBody UserRequestApiModel requestBody
+    ) {
+        throw new HosterException(ErrorCode.USER_CURRENCY_NOT_FOUND, "Currency not found: " + requestBody.getCurrency());
+
+        return userService.createUser(requestBody);
+    }
 
 
 
 }
 
+// Request object
+class UserRequestApiModel {
+    private String name;
+    private int age;
+}
+
+// Response object
+class UserResponseApiModel {
+    private String name;
+    private String currency;
+    private int age;
+}
+
+// Domain model
+class UserDomainEntity {
+    private UUID id;
+    private String name;
+    private String currency;
+    private int age;
+}
+
+// Service
+class UserService {
+    @Autowired
+    private UserRepository userRepository;
+
+    public UserResponseApiModel createUser(UserRequestApiModel user) {
+        UserDomainEntity entity = new UserDomainEntity(
+            UUID.randomUUID(),
+            user.getName(),
+            "USD",
+            user.getAge()
+        );
+
+        UserDomainEntity savedEntity = userRepository.save(user);
+        return new UserResponseApiModel(
+            savedEntity.getName(),
+            savedEntity.getCurrency(),
+            savedEntity.getAge()
+        );
+    }
+}

@@ -1,4 +1,4 @@
-package com.excel.hoster.excelfile;
+package com.excel.hoster.repository.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -10,7 +10,7 @@ import java.util.UUID;
 
 
 @Entity
-public class ExcelFile {
+public class ExcelFileEntity {
 
     private String version;
     @NotBlank(message = "definitionName is mandatory")
