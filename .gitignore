@@ -25,3 +25,6 @@ replay_pid*
 
 # DS store
 .DS_Store
+
+# IntelliJ
+.idea

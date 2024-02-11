@@ -1,0 +1,8 @@
+version: '3.8'
+services:
+  hoster-db:
+    image: arm64v8/mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: mysql
+    ports:
+      - "3306:3306"
