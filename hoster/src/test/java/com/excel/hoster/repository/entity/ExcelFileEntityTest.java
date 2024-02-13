@@ -1,7 +1,6 @@
 package com.excel.hoster.repository.entity;
 
 import com.excel.hoster.repository.ExcelRepository;
-import com.excel.hoster.repository.entity.ExcelFileEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

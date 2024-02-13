@@ -1,6 +1,5 @@
 package com.excel.hoster.service;
 
-import com.excel.hoster.service.ExcelFileService;
 import com.excel.hoster.validator.ExcelFileValidator;
 import org.junit.jupiter.api.*;
 
@@ -9,12 +8,13 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.validation.BindingResult;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.Mockito.*;
 
 @DisplayName("When executing logic on an ExcelFile")
 public class ExcelFileServiceTest {
+
+    private AutoCloseable closeable;
+
 
     @Mock
     MockMultipartFile mockFile;
@@ -22,18 +22,17 @@ public class ExcelFileServiceTest {
     @Mock
     private BindingResult bindingResult;
 
-
-
     @BeforeEach
     void init() {
-        MockitoAnnotations.openMocks(this);
+        closeable = MockitoAnnotations.openMocks(this);
 
         when(mockFile.getSize()).thenReturn(2L*1024*1024);
         when(mockFile.getOriginalFilename()).thenReturn("test.xlsx");
     }
 
-    void testMyStuff() {
-        //
+    @AfterEach
+    void closeMocks() throws Exception {
+        closeable.close();
     }
 
     @Nested

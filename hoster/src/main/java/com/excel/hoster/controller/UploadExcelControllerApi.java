@@ -3,7 +3,6 @@ package com.excel.hoster.controller;
 
 import com.excel.hoster.repository.entity.ExcelFileEntity;
 import com.excel.hoster.dto.ExcelFileDTO;
-import com.excel.hoster.service.ExcelFileService;
 import com.excel.hoster.repository.ExcelRepository;
 import com.excel.hoster.service.ObjectResponse;
 import com.excel.hoster.validator.ExcelFileValidator;
@@ -13,7 +12,6 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -38,25 +36,17 @@ public class UploadExcelControllerApi {
     public ResponseEntity<?> uploadExcelSubmit(
             @Valid @ModelAttribute ExcelFileDTO excelFileDTO,
             @RequestParam(name="file",required = false) MultipartFile file,
-            BindingResult bindingResult, Model model)
+            BindingResult bindingResult)
             throws IOException {
-
+        logger.info("Excel file upload requested: " + excelFileDTO.toString());
         ExcelFileValidator.validateExcel(bindingResult, file);
-
         if (bindingResult.hasErrors()) {
             return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
         }
-
         ExcelFileEntity excelFile = new ExcelFileEntity(excelFileDTO.getDefinitionName(), excelFileDTO.getBrickName(), excelFileDTO.getAttributeName(),file.getOriginalFilename(), file.getBytes());
         excelRepository.save(excelFile);
-
         ObjectResponse<ExcelFileEntity> response = new ObjectResponse<>(HttpStatus.OK.value(), "Excel file uploaded successfully", excelFile);
-
         return ResponseEntity.ok(response);
     }
-
-
-
-
 }
 

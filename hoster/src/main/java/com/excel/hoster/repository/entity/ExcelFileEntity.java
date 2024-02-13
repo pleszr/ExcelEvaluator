@@ -25,11 +25,15 @@ public class ExcelFileEntity {
     private String fullTextId;
     @JsonIgnore
     @Lob
-    @Column(name="ExcelFile", nullable=false, columnDefinition="blob")
+    @Column(nullable=false, columnDefinition="blob")
     private byte[] excelFile;
 
-    public ExcelFileEntity(String definitionName, String brickName, String attributeName, String fileName, byte[] excelFile) {
-        this.version = version;
+    public ExcelFileEntity(
+            String definitionName,
+            String brickName,
+            String attributeName,
+            String fileName,
+            byte[] excelFile) {
         this.definitionName = definitionName;
         this.brickName = brickName;
         this.attributeName = attributeName;
