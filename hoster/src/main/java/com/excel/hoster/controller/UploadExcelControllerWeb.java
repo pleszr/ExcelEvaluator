@@ -2,7 +2,6 @@ package com.excel.hoster.controller;
 
 import com.excel.hoster.repository.entity.ExcelFileEntity;
 import com.excel.hoster.dto.ExcelFileDTO;
-import com.excel.hoster.service.ExcelFileService;
 import com.excel.hoster.repository.ExcelRepository;
 import com.excel.hoster.validator.ExcelFileValidator;
 import jakarta.validation.Valid;
@@ -34,12 +33,14 @@ public class UploadExcelControllerWeb {
 
     @GetMapping("/uploadExcel")
     public String uploadExcelForm(Model model) {
+        logger.info("Excel file upload form requested");
         model.addAttribute("excelFileDTO",new ExcelFileDTO());
         return "ExcelUpload";
     }
 
     @GetMapping("/error")
-    public String error(Model model) {
+    public String error() {
+        logger.info("Error page requested");
         return "Error";
     }
 
@@ -48,13 +49,12 @@ public class UploadExcelControllerWeb {
             @Valid @ModelAttribute ExcelFileDTO excelFileDTO,
             @RequestParam(name="file",required = false) MultipartFile file,
             BindingResult bindingResult, Model model) throws IOException {
-
+        logger.info("Excel file upload requested: " + excelFileDTO.toString());
         ExcelFileValidator.validateExcel(bindingResult,file);
 
         ExcelFileEntity excelFile = new ExcelFileEntity(excelFileDTO.getDefinitionName(), excelFileDTO.getBrickName(), excelFileDTO.getAttributeName(),file.getOriginalFilename(), file.getBytes());
         model.addAttribute("excelFile", excelFile);
         excelRepository.save(excelFile);
-
 
         return "Result";
     }

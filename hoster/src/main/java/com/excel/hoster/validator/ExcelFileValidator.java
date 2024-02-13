@@ -2,7 +2,6 @@ package com.excel.hoster.validator;
 
 import com.excel.hoster.controller.UploadExcelControllerWeb;
 import com.excel.hoster.exception.MissingFieldException;
-import com.excel.hoster.repository.ExcelRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
@@ -14,12 +13,6 @@ import java.util.stream.Collectors;
 @Service
 public class ExcelFileValidator {
     private static final Logger logger = LogManager.getLogger(UploadExcelControllerWeb.class);
-
-    private final ExcelRepository excelRepository;
-
-    ExcelFileValidator(ExcelRepository excelRepository) {
-        this.excelRepository = excelRepository;
-    }
 
     public static void validateExcel(BindingResult bindingResult, MultipartFile file) {
         try {
