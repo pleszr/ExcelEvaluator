@@ -41,12 +41,16 @@ public class ExposeExcelController {
     public ResponseEntity<?> getApachePoiVersion(){
         Map<String,String> apachePoiVersionMap = new HashMap<String,String>();
         apachePoiVersionMap.put("apachePoiVersion",apachePoiVersion);
-        ObjectResponse<Map<String,String>> response = new ObjectResponse<>(HttpStatus.OK.value(), "Apache POI version successfully requested",apachePoiVersionMap);
+        ObjectResponse<Map<String,String>> response = new ObjectResponse<>(
+                HttpStatus.OK.value(),
+                "Apache POI version successfully requested",
+                apachePoiVersionMap);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/getExcelVersion")
-    public ResponseEntity<?> getExcelVersion(@RequestParam(name="fullTextId",required = true) String fullTextId) {
+    public ResponseEntity<?> getExcelVersion(
+            @RequestParam(name="fullTextId",required = true) String fullTextId) {
 
         ExcelFileEntity excelFile = excelFileService.getExcelFileByFullTextId(fullTextId);
 
@@ -60,7 +64,8 @@ public class ExposeExcelController {
     }
 
     @GetMapping("/getExcelFile")
-    public ResponseEntity<?> getExcelFile(@RequestParam(name = "fullTextId", required = true) String fullTextId) {
+    public ResponseEntity<?> getExcelFile(
+            @RequestParam(name = "fullTextId", required = true) String fullTextId) {
 
         ExcelFileEntity excelFile = excelFileService.getExcelFileByFullTextId(fullTextId);
 
