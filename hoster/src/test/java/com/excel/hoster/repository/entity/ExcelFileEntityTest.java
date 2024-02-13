@@ -1,22 +1,18 @@
-package com.excel.hoster.excelfile;
+package com.excel.hoster.repository.entity;
 
-import com.excel.hoster.controller.UploadExcelControllerWeb;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import com.excel.hoster.repository.ExcelRepository;
+import com.excel.hoster.repository.entity.ExcelFileEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.test.web.servlet.MockMvc;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -24,7 +20,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @SpringBootTest
-class ExcelFileTest {
+class ExcelFileEntityTest {
     MockMultipartFile mockFile;
     String definitionName;
     String brickName;
@@ -57,9 +53,9 @@ class ExcelFileTest {
         } catch (IOException ioException) {
             fail("DummyExcel Not found" + ioException.getMessage());
         }
-        ExcelFile excelFile = new ExcelFile(definitionName,brickName,attributeName,"dummyExcelFile.xlsx",dummyExcel);
+        ExcelFileEntity excelFile = new ExcelFileEntity(definitionName,brickName,attributeName,"dummyExcelFile.xlsx",dummyExcel);
         excelRepository.save(excelFile);
-        verify(excelRepository,times(1)).save(any(ExcelFile.class));
+        verify(excelRepository,times(1)).save(any(ExcelFileEntity.class));
         assertNotNull(excelFile);
     }
 

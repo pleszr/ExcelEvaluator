@@ -1,8 +1,8 @@
 package com.excel.hoster.controller;
 
-import com.excel.hoster.excelfile.ExcelFile;
-import com.excel.hoster.excelfile.ExcelFileService;
-import com.excel.hoster.excelfile.ExcelRepository;
+import com.excel.hoster.repository.entity.ExcelFileEntity;
+import com.excel.hoster.service.ExcelFileService;
+import com.excel.hoster.repository.ExcelRepository;
 import com.jayway.jsonpath.JsonPath;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +28,7 @@ class ExposeExcelControllerTest {
     String sampleAttributeName;
     String sampleFullTextId;
 
-    ExcelFile mockExcelFile;
+    ExcelFileEntity mockExcelFile;
 
     @BeforeEach
     void init() {
@@ -38,7 +38,7 @@ class ExposeExcelControllerTest {
         this.sampleAttributeName = "sampleAttributeName";
         this.sampleFullTextId = "sampleDefName.sampleBrickName.sampleAttributeName";
 
-        mockExcelFile = mock(ExcelFile.class);
+        mockExcelFile = mock(ExcelFileEntity.class);
         when(mockExcelFile.getVersion()).thenReturn(sampleVersion);
         when(mockExcelFile.getDefinitionName()).thenReturn(sampleDefName);
         when(mockExcelFile.getBrickName()).thenReturn(sampleBrickName);

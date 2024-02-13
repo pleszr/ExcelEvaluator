@@ -1,4 +1,4 @@
-package com.excel.hoster.excelfile;
+package com.excel.hoster.dto;
 
 import jakarta.validation.constraints.NotBlank;
 

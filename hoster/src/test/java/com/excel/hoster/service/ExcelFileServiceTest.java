@@ -1,20 +1,13 @@
-package com.excel.hoster.excelfile;
+package com.excel.hoster.service;
 
+import com.excel.hoster.service.ExcelFileService;
+import com.excel.hoster.validator.ExcelFileValidator;
 import org.junit.jupiter.api.*;
 
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.beans.PropertyEditorRegistry;
-import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.DataBinder;
-import org.springframework.validation.FieldError;
-import org.springframework.validation.ObjectError;
-
-import java.beans.PropertyEditor;
-import java.util.List;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -51,7 +44,7 @@ public class ExcelFileServiceTest {
         @DisplayName("it should not give an error if the file is valid")
         @Test
         void testExcelFileValid() {
-            ExcelFileService.validateExcel(bindingResult,mockFile);
+            ExcelFileValidator.validateExcel(bindingResult,mockFile);
             verify(bindingResult,never()).rejectValue(anyString(),anyString(),anyString());
         }
 
@@ -61,7 +54,7 @@ public class ExcelFileServiceTest {
         void testExcelFileTooBig() {
             when(mockFile.getSize()).thenReturn(21L*1024*1024);
 
-            ExcelFileService.validateExcel(bindingResult,mockFile);
+            ExcelFileValidator.validateExcel(bindingResult,mockFile);
             verify(bindingResult,times(1)).rejectValue("excelFile","400","Excel file must be less than 20MB");
         }
 
@@ -71,7 +64,7 @@ public class ExcelFileServiceTest {
         void testExcelFileFileNotExcel() {
             when(mockFile.getOriginalFilename()).thenReturn("test.ppt");
 
-            ExcelFileService.validateExcel(bindingResult,mockFile);
+            ExcelFileValidator.validateExcel(bindingResult,mockFile);
             verify(bindingResult,times(1)).rejectValue("excelFile","400","File must be .xls or .xlsx");
         }
 
@@ -80,7 +73,7 @@ public class ExcelFileServiceTest {
         @Test
         void testExcelFileIsNull() {
 
-            ExcelFileService.validateExcel(bindingResult,null);
+            ExcelFileValidator.validateExcel(bindingResult,null);
             verify(bindingResult,times(1)).rejectValue("excelFile","400","excelFile is mandatory");
 
 
