@@ -20,15 +20,31 @@ public class ObjectResponse<ResponseObject> {
         return responseStatus;
     }
 
+    public void setResponseStatus(int responseStatus) {
+        this.responseStatus = responseStatus;
+    }
+
     public String getResponseDetail() {
         return responseDetail;
+    }
+
+    public void setResponseDetail(String responseDetail) {
+        this.responseDetail = responseDetail;
     }
 
     public String getResponseTime() {
         return responseTime;
     }
 
+    public void setResponseTime(String responseTime) {
+        this.responseTime = responseTime;
+    }
+
     public ResponseObject getResponseObject() {
         return responseObject;
+    }
+
+    public void setResponseObject(ResponseObject responseObject) {
+        this.responseObject = responseObject;
     }
 }

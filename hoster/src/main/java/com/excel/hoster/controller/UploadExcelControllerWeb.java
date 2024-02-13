@@ -33,25 +33,25 @@ public class UploadExcelControllerWeb {
 
     @GetMapping("/uploadExcel")
     public String uploadExcelForm(Model model) {
+        logger.info("Excel file upload form requested via /web/uploadExcel");
         model.addAttribute("excelFileDTO",new ExcelFileDTO());
         return "ExcelUpload";
     }
 
     @GetMapping("/error")
-    public String error(Model model) {
+    public String error() {
+        logger.info("Error page requested via /error");
         return "Error";
     }
 
     @PostMapping("/uploadExcel")
     public String uploadExcelSubmit(@Valid @ModelAttribute ExcelFileDTO excelFileDTO, @RequestParam(name="file",required = false) MultipartFile file, BindingResult bindingResult, Model model) throws IOException {
-
+        logger.info("Excel file upload requested via /web/uploadExcel");
         ExcelFileService.validateExcel(bindingResult,file);
 
         ExcelFile excelFile = new ExcelFile(excelFileDTO.getDefinitionName(), excelFileDTO.getBrickName(), excelFileDTO.getAttributeName(),file.getOriginalFilename(), file.getBytes());
         model.addAttribute("excelFile", excelFile);
         excelRepository.save(excelFile);
-
-
         return "Result";
     }
 

@@ -5,14 +5,12 @@ import com.excel.hoster.excelfile.ExcelFile;
 import com.excel.hoster.excelfile.ExcelFileDTO;
 import com.excel.hoster.excelfile.ExcelFileService;
 import com.excel.hoster.excelfile.ExcelRepository;
-import com.excel.hoster.exception.MissingFieldException;
 import jakarta.validation.Valid;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -34,8 +32,8 @@ public class UploadExcelControllerApi {
     }
 
     @PostMapping("/uploadExcel")
-    public ResponseEntity<?> uploadExcelSubmit(@Valid @ModelAttribute ExcelFileDTO excelFileDTO, @RequestParam(name="file",required = false) MultipartFile file, BindingResult bindingResult, Model model) throws IOException {
-
+    public ResponseEntity<?> uploadExcelSubmit(@Valid @ModelAttribute ExcelFileDTO excelFileDTO, @RequestParam(name="file",required = false) MultipartFile file, BindingResult bindingResult) throws IOException {
+        logger.info("Excel file upload requested via /uploadExcel");
         ExcelFileService.validateExcel(bindingResult, file);
 
         if (bindingResult.hasErrors()) {

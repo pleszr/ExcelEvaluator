@@ -3,10 +3,8 @@ package com.excel.hoster.controller;
 
 import com.excel.hoster.excelfile.ExcelFile;
 import com.excel.hoster.excelfile.ExcelFileService;
-import com.excel.hoster.excelfile.ExcelRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
@@ -23,30 +21,27 @@ import java.util.Map;
 @RequestMapping("/api")
 public class ExposeExcelController {
 
-    private final ExcelRepository excelRepository;
+    public ExposeExcelController(ExcelFileService excelFileService) {
+        this.excelFileService = excelFileService;
+    }
+
     private static final Logger logger = LogManager.getLogger(UploadExcelControllerApi.class);
     @Value("${apache.poi.version}")
     private String apachePoiVersion;
-
-    @Autowired
-    private ExcelFileService excelFileService;
-
-    @Autowired
-    public ExposeExcelController(ExcelRepository excelRepository) {
-        this.excelRepository = excelRepository;
-    }
+    private final ExcelFileService excelFileService;
 
     @GetMapping("/getApachePoiVersion")
     public ResponseEntity<?> getApachePoiVersion(){
-        Map<String,String> apachePoiVersionMap = new HashMap<String,String>();
+        logger.info("Apache POI version requested via /getApachePoiVersion");
+        Map<String,String> apachePoiVersionMap = new HashMap<>();
         apachePoiVersionMap.put("apachePoiVersion",apachePoiVersion);
         ObjectResponse<Map<String,String>> response = new ObjectResponse<>(HttpStatus.OK.value(), "Apache POI version successfully requested",apachePoiVersionMap);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/getExcelVersion")
-    public ResponseEntity<?> getExcelVersion(@RequestParam(name="fullTextId",required = true) String fullTextId) {
-
+    public ResponseEntity<?> getExcelVersion(@RequestParam(name="fullTextId") String fullTextId) {
+        logger.info("Excel version requested via /getExcelVersion with fullTextId: " + fullTextId);
         ExcelFile excelFile = excelFileService.getExcelFileByFullTextId(fullTextId);
 
         if (excelFile ==null) {
@@ -59,8 +54,8 @@ public class ExposeExcelController {
     }
 
     @GetMapping("/getExcelFile")
-    public ResponseEntity<?> getExcelFile(@RequestParam(name = "fullTextId", required = true) String fullTextId) {
-
+    public ResponseEntity<?> getExcelFile(@RequestParam(name = "fullTextId") String fullTextId) {
+        logger.info("Excel file requested via /getExcelFile with fullTextId: " + fullTextId);
         ExcelFile excelFile = excelFileService.getExcelFileByFullTextId(fullTextId);
 
         if (excelFile ==null) {
