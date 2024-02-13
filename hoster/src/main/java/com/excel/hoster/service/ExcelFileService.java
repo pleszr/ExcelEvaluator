@@ -1,7 +1,9 @@
-package com.excel.hoster.excelfile;
+package com.excel.hoster.service;
 
 import com.excel.hoster.exception.MissingFieldException;
 import com.excel.hoster.controller.UploadExcelControllerWeb;
+import com.excel.hoster.repository.ExcelRepository;
+import com.excel.hoster.repository.entity.ExcelFileEntity;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,8 +53,8 @@ public class ExcelFileService {
         }
     }
 
-    public ExcelFile getExcelFileByFullTextId(String fullTextId) {
-        Optional<ExcelFile> excelFile = excelRepository.findById(fullTextId);
+    public ExcelFileEntity getExcelFileByFullTextId(String fullTextId) {
+        Optional<ExcelFileEntity> excelFile = excelRepository.findById(fullTextId);
         return excelFile.orElse(null);
     }
 

@@ -1,11 +1,11 @@
 package com.excel.hoster.controller;
 
 
-import com.excel.hoster.excelfile.ExcelFile;
-import com.excel.hoster.excelfile.ExcelFileDTO;
-import com.excel.hoster.excelfile.ExcelFileService;
-import com.excel.hoster.excelfile.ExcelRepository;
-import com.excel.hoster.exception.MissingFieldException;
+import com.excel.hoster.repository.entity.ExcelFileEntity;
+import com.excel.dto.ExcelFileDTO;
+import com.excel.hoster.service.ExcelFileService;
+import com.excel.hoster.repository.ExcelRepository;
+import com.excel.hoster.service.ObjectResponse;
 import jakarta.validation.Valid;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -42,10 +42,10 @@ public class UploadExcelControllerApi {
             return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
         }
 
-        ExcelFile excelFile = new ExcelFile(excelFileDTO.getDefinitionName(), excelFileDTO.getBrickName(), excelFileDTO.getAttributeName(),file.getOriginalFilename(), file.getBytes());
+        ExcelFileEntity excelFile = new ExcelFileEntity(excelFileDTO.getDefinitionName(), excelFileDTO.getBrickName(), excelFileDTO.getAttributeName(),file.getOriginalFilename(), file.getBytes());
         excelRepository.save(excelFile);
 
-        ObjectResponse<ExcelFile> response = new ObjectResponse<>(HttpStatus.OK.value(), "Excel file uploaded successfully", excelFile);
+        ObjectResponse<ExcelFileEntity> response = new ObjectResponse<>(HttpStatus.OK.value(), "Excel file uploaded successfully", excelFile);
 
         return ResponseEntity.ok(response);
     }

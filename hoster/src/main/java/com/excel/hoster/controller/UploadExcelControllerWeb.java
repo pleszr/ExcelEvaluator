@@ -1,9 +1,9 @@
 package com.excel.hoster.controller;
 
-import com.excel.hoster.excelfile.ExcelFile;
-import com.excel.hoster.excelfile.ExcelFileDTO;
-import com.excel.hoster.excelfile.ExcelFileService;
-import com.excel.hoster.excelfile.ExcelRepository;
+import com.excel.hoster.repository.entity.ExcelFileEntity;
+import com.excel.dto.ExcelFileDTO;
+import com.excel.hoster.service.ExcelFileService;
+import com.excel.hoster.repository.ExcelRepository;
 import jakarta.validation.Valid;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -47,7 +47,7 @@ public class UploadExcelControllerWeb {
 
         ExcelFileService.validateExcel(bindingResult,file);
 
-        ExcelFile excelFile = new ExcelFile(excelFileDTO.getDefinitionName(), excelFileDTO.getBrickName(), excelFileDTO.getAttributeName(),file.getOriginalFilename(), file.getBytes());
+        ExcelFileEntity excelFile = new ExcelFileEntity(excelFileDTO.getDefinitionName(), excelFileDTO.getBrickName(), excelFileDTO.getAttributeName(),file.getOriginalFilename(), file.getBytes());
         model.addAttribute("excelFile", excelFile);
         excelRepository.save(excelFile);
 

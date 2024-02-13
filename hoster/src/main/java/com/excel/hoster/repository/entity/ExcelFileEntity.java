@@ -1,4 +1,4 @@
-package com.excel.hoster.excelfile;
+package com.excel.hoster.repository.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -10,7 +10,7 @@ import java.util.UUID;
 
 
 @Entity
-public class ExcelFile {
+public class ExcelFileEntity {
 
     private String version;
     @NotBlank(message = "definitionName is mandatory")
@@ -28,7 +28,7 @@ public class ExcelFile {
     @Column(name="ExcelFile", nullable=false, columnDefinition="blob")
     private byte[] excelFile;
 
-    public ExcelFile(String definitionName, String brickName, String attributeName, String fileName, byte[] excelFile) {
+    public ExcelFileEntity(String definitionName, String brickName, String attributeName, String fileName, byte[] excelFile) {
         this.version = version;
         this.definitionName = definitionName;
         this.brickName = brickName;
@@ -39,7 +39,7 @@ public class ExcelFile {
         this.fullTextId = definitionName + "." +  brickName + "." + attributeName;
     }
 
-    public ExcelFile() {
+    public ExcelFileEntity() {
         version = UUID.randomUUID().toString();
         fullTextId = definitionName + "." +  brickName + "." + attributeName;
     }
