@@ -5,8 +5,7 @@ import com.excel.hoster.dto.ExcelFileDTO;
 import com.excel.hoster.repository.ExcelRepository;
 import com.excel.hoster.validator.ExcelFileValidator;
 import jakarta.validation.Valid;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.stereotype.Controller;
@@ -16,13 +15,12 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
-
+@Log4j2
 @Controller
 @RequestMapping("/web")
 public class UploadExcelControllerWeb {
 
     private final ExcelRepository excelRepository;
-    private static final Logger logger = LogManager.getLogger(UploadExcelControllerWeb.class);
 
     @Autowired
     public UploadExcelControllerWeb(ExcelRepository excelRepository) {
@@ -33,14 +31,14 @@ public class UploadExcelControllerWeb {
 
     @GetMapping("/uploadExcel")
     public String uploadExcelForm(Model model) {
-        logger.info("Excel file upload form requested");
+        log.info("Excel file upload form requested");
         model.addAttribute("excelFileDTO",new ExcelFileDTO());
         return "ExcelUpload";
     }
 
     @GetMapping("/error")
     public String error() {
-        logger.info("Error page requested");
+        log.info("Error page requested");
         return "Error";
     }
 
@@ -49,7 +47,7 @@ public class UploadExcelControllerWeb {
             @Valid @ModelAttribute ExcelFileDTO excelFileDTO,
             @RequestParam(name="file",required = false) MultipartFile file,
             BindingResult bindingResult, Model model) throws IOException {
-        logger.info("Excel file upload requested: " + excelFileDTO.toString());
+        log.info("Excel file upload requested: " + excelFileDTO.toString());
         ExcelFileValidator.validateExcel(bindingResult,file);
 
         ExcelFileEntity excelFile = new ExcelFileEntity(excelFileDTO.getDefinitionName(), excelFileDTO.getBrickName(), excelFileDTO.getAttributeName(),file.getOriginalFilename(), file.getBytes());

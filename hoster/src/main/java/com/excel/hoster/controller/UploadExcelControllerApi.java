@@ -7,8 +7,7 @@ import com.excel.hoster.repository.ExcelRepository;
 import com.excel.hoster.service.ObjectResponse;
 import com.excel.hoster.validator.ExcelFileValidator;
 import jakarta.validation.Valid;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,13 +17,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
-
+@Log4j2
 @RestController
 @RequestMapping("/api")
 public class UploadExcelControllerApi {
 
-
-    private static final Logger logger = LogManager.getLogger(UploadExcelControllerApi.class);
     private final ExcelRepository excelRepository;
 
     @Autowired
@@ -38,7 +35,7 @@ public class UploadExcelControllerApi {
             @RequestParam(name="file",required = false) MultipartFile file,
             BindingResult bindingResult)
             throws IOException {
-        logger.info("Excel file upload requested: " + excelFileDTO.toString());
+        log.info("Excel file upload requested: " + excelFileDTO.toString());
         ExcelFileValidator.validateExcel(bindingResult, file);
         if (bindingResult.hasErrors()) {
             return ResponseEntity.badRequest().body(bindingResult.getAllErrors());

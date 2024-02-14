@@ -1,8 +1,12 @@
 package com.excel.hoster.service;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
+@Setter @Getter
 public class ObjectResponse<ResponseObject> {
     private int responseStatus;
     private String responseDetail;
@@ -14,21 +18,5 @@ public class ObjectResponse<ResponseObject> {
         this.responseDetail = responseDetail;
         this.responseObject = responseObject;
         this.responseTime = ZonedDateTime.now().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
-    }
-
-    public int getResponseStatus() {
-        return responseStatus;
-    }
-
-    public String getResponseDetail() {
-        return responseDetail;
-    }
-
-    public String getResponseTime() {
-        return responseTime;
-    }
-
-    public ResponseObject getResponseObject() {
-        return responseObject;
     }
 }
