@@ -1,8 +1,12 @@
 package com.excel.hoster.controller;
 
 
+import com.excel.hoster.dto.ExcelFileDTO;
+import com.excel.hoster.repository.ExcelRepository;
 import com.excel.hoster.repository.entity.ExcelFileEntity;
 import com.excel.hoster.service.ExcelFileService;
+import com.excel.hoster.validator.ExcelFileValidator;
+import jakarta.validation.Valid;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,8 +15,11 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,16 +27,18 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api")
 @Log4j2
-public class ExposeExcelController {
+public class ExcelApiController {
 
     @Value("${apache.poi.version}")
     private String apachePoiVersion;
 
     private final ExcelFileService excelFileService;
+    private final ExcelRepository excelRepository;
 
     @Autowired
-    public ExposeExcelController(ExcelFileService excelFileService) {
+    public ExcelApiController(ExcelFileService excelFileService, ExcelRepository excelRepository) {
         this.excelFileService = excelFileService;
+        this.excelRepository = excelRepository;
     }
 
 
@@ -82,6 +91,23 @@ public class ExposeExcelController {
                 .contentLength(excelFileByteArray.length)
                 .contentType(MediaType.APPLICATION_OCTET_STREAM)
                 .body(byteArrayResource);
+    }
+
+
+    @PostMapping("/uploadExcel")
+    public ResponseEntity<?> uploadExcelSubmit(
+            @Valid @ModelAttribute ExcelFileDTO excelFileDTO,
+            @RequestParam(name="file",required = false) MultipartFile file,
+            BindingResult bindingResult)
+            throws IOException {
+        log.info("Excel file upload requested: " + excelFileDTO.toString());
+        ExcelFileValidator.validateExcel(bindingResult, file);
+        if (bindingResult.hasErrors()) {
+            return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
+        }
+        ExcelFileEntity excelFile = new ExcelFileEntity(excelFileDTO.getDefinitionName(), excelFileDTO.getBrickName(), excelFileDTO.getAttributeName(),file.getOriginalFilename(), file.getBytes());
+        excelRepository.save(excelFile);
+        return ResponseEntity.ok(excelFile);
     }
 }
 

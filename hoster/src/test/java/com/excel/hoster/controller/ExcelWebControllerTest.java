@@ -22,8 +22,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @Tag("IntegrationTest")
 @DisplayName("When uploading an Excel file via WEB")
-@WebMvcTest(UploadExcelControllerWeb.class)
-public class UploadExcelControllerWebTest {
+@WebMvcTest(ExcelWebController.class)
+public class ExcelWebControllerTest {
     MockMultipartFile mockFile;
     String definitionName;
     String brickName;

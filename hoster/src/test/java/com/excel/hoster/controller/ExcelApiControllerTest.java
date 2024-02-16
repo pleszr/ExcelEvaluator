@@ -20,8 +20,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @Tag("UnitTest")
 @DisplayName("When consuming ExposeExcel API")
-@WebMvcTest(ExposeExcelController.class)
-class ExposeExcelControllerTest {
+@WebMvcTest(ExcelApiController.class)
+class ExcelApiControllerTest {
     String sampleVersion;
     String sampleDefName;
     String sampleBrickName;
