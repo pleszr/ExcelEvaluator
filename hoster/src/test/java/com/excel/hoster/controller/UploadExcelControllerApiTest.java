@@ -2,6 +2,7 @@ package com.excel.hoster.controller;
 
 import com.excel.hoster.repository.entity.ExcelFileEntity;
 import com.excel.hoster.repository.ExcelRepository;
+import com.excel.hoster.service.ExcelFileService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -22,7 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @Tag("IntegrationTest")
 @DisplayName("When uploading an Excel file via API")
-@WebMvcTest(UploadExcelControllerApi.class)
+@WebMvcTest(ExcelApiController.class)
 public class UploadExcelControllerApiTest {
     MockMultipartFile mockFile;
     String definitionName;
@@ -46,6 +47,10 @@ public class UploadExcelControllerApiTest {
 
     @Autowired
     private MockMvc mockMvc;
+
+    @MockBean
+    //it is necessary to mock the excelFileService because it is part of the constructor of the ExcelApiController
+    private ExcelFileService excelFileService;
 
     @MockBean
     private ExcelRepository excelRepository;
