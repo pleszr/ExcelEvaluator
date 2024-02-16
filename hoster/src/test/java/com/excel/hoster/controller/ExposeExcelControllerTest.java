@@ -107,11 +107,10 @@ class ExposeExcelControllerTest {
                     .getResponse()
                     .getContentAsString();
 
-            Integer responseStatusFromJson = JsonPath.read(responseJson, "$.responseStatus");
-            assertEquals(404,responseStatusFromJson,"If ExcelFile is not found it should give back 404 error");
+            String responseMessageFromJson = JsonPath.read(responseJson, "$.responseMessage");
+            assertEquals("No Excel found with fullTextId: " + sampleFullTextId,responseMessageFromJson,"If ExcelFile is not found it should give back 404 error with an error message");
 
             verify(excelFileService,times(1)).getExcelFileByFullTextId(sampleFullTextId);
         }
     }
-
 }
