@@ -59,8 +59,7 @@ public class UploadExcelControllerApiTest {
                         .param("definitionName", definitionName)
                         .param("brickName", brickName)
                         .param("attributeName", attributeName))
-                .andExpect(status().isOk())
-                .andExpect(content().string(containsString("Excel file uploaded successfully")));
+                .andExpect(status().isOk());
 
         verify(excelRepository,times(1)).save(any(ExcelFileEntity.class));
     }

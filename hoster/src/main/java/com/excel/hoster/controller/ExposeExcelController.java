@@ -3,7 +3,6 @@ package com.excel.hoster.controller;
 
 import com.excel.hoster.repository.entity.ExcelFileEntity;
 import com.excel.hoster.service.ExcelFileService;
-import com.excel.hoster.service.ObjectResponse;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -41,11 +40,7 @@ public class ExposeExcelController {
         log.info("Apache POI version requested: " + apachePoiVersion);
         Map<String,String> apachePoiVersionMap = new HashMap<>();
         apachePoiVersionMap.put("apachePoiVersion",apachePoiVersion);
-        ObjectResponse<Map<String,String>> response = new ObjectResponse<>(
-                HttpStatus.OK.value(),
-                "Apache POI version successfully requested",
-                apachePoiVersionMap);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(apachePoiVersionMap);
     }
 
     @GetMapping("/getExcelVersion")
@@ -56,12 +51,11 @@ public class ExposeExcelController {
         ExcelFileEntity excelFile = excelFileService.getExcelFileByFullTextId(fullTextId);
 
         if (excelFile ==null) {
-            ObjectResponse<String> response = new ObjectResponse<>(HttpStatus.NOT_FOUND.value(), "No Excel found with fullTextId: " + fullTextId,null);
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+            Map<String,String> responseMap = new HashMap<>();
+            responseMap.put("responseMessage","No Excel found with fullTextId: " + fullTextId);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseMap);
         }
-
-        ObjectResponse<ExcelFileEntity> response = new ObjectResponse<>(HttpStatus.OK.value(), "Excel version successfully requested",excelFile);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(excelFile);
     }
 
     @GetMapping("/getExcelFile")
@@ -71,8 +65,9 @@ public class ExposeExcelController {
         ExcelFileEntity excelFile = excelFileService.getExcelFileByFullTextId(fullTextId);
 
         if (excelFile ==null) {
-            ObjectResponse<String> response = new ObjectResponse<>(HttpStatus.NOT_FOUND.value(), "No Excel found with fullTextId: " + fullTextId,null);
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+            Map<String,String> responseMap = new HashMap<>();
+            responseMap.put("responseMessage","No Excel found with fullTextId: " + fullTextId);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseMap);
         }
 
         byte[] excelFileByteArray = excelFile.getExcelFile();

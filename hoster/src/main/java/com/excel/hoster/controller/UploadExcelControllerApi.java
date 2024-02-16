@@ -4,7 +4,6 @@ package com.excel.hoster.controller;
 import com.excel.hoster.repository.entity.ExcelFileEntity;
 import com.excel.hoster.dto.ExcelFileDTO;
 import com.excel.hoster.repository.ExcelRepository;
-import com.excel.hoster.service.ObjectResponse;
 import com.excel.hoster.validator.ExcelFileValidator;
 import jakarta.validation.Valid;
 import lombok.extern.log4j.Log4j2;
@@ -42,8 +41,7 @@ public class UploadExcelControllerApi {
         }
         ExcelFileEntity excelFile = new ExcelFileEntity(excelFileDTO.getDefinitionName(), excelFileDTO.getBrickName(), excelFileDTO.getAttributeName(),file.getOriginalFilename(), file.getBytes());
         excelRepository.save(excelFile);
-        ObjectResponse<ExcelFileEntity> response = new ObjectResponse<>(HttpStatus.OK.value(), "Excel file uploaded successfully", excelFile);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(excelFile);
     }
 }
 
