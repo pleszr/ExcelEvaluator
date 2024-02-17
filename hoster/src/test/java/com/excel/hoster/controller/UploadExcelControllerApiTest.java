@@ -79,7 +79,7 @@ public class UploadExcelControllerApiTest {
                         .param("brickName", brickName)
                         .param("attributeName", attributeName))
                 .andExpect(status().is4xxClientError())
-                .andExpect(content().string(containsString("excelFile is mandatory")));
+                .andExpect(content().string(containsString("Excel file is mandatory")));
         verifyNoInteractions(excelRepository);
     }
 
@@ -93,7 +93,7 @@ public class UploadExcelControllerApiTest {
                         .param("brickName", brickName)
                         .param("attributeName", attributeName))
                 .andExpect(status().is4xxClientError())
-                .andExpect(content().string(containsString("excelFile is mandatory")));
+                .andExpect(content().string(containsString("Excel file is mandatory")));
         verifyNoInteractions(excelRepository);
 
     }
@@ -168,7 +168,7 @@ public class UploadExcelControllerApiTest {
                         .param("brickName", brickName)
                         .param("attributeName", attributeName))
                 .andExpect(status().is4xxClientError())
-                .andExpect(content().string(containsString("File must be .xls or .xlsx")));
+                .andExpect(content().string(containsString("Excel file must be .xls or .xlsx")));
         verifyNoInteractions(excelRepository);
 
     }

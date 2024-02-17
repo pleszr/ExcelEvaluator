@@ -20,6 +20,7 @@ public class ExcelFile {
         this.attributeName = attributeName;
         this.fileName = fileName;
         this.excelFile = excelFile;
+        this.fullTextId = definitionName + "." +  brickName + "." + attributeName;
     }
 
     public ExcelFile(ExcelFileEntity excelFileEntity) {

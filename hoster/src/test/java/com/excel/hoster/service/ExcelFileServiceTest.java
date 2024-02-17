@@ -1,5 +1,7 @@
 package com.excel.hoster.service;
 
+import com.excel.hoster.exception.ErrorCode;
+import com.excel.hoster.exception.HosterException;
 import com.excel.hoster.validator.ExcelFileValidator;
 import org.junit.jupiter.api.*;
 
@@ -8,6 +10,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.validation.BindingResult;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @DisplayName("When executing logic on an ExcelFile")
@@ -43,8 +46,7 @@ public class ExcelFileServiceTest {
         @DisplayName("it should not give an error if the file is valid")
         @Test
         void testExcelFileValid() {
-            ExcelFileValidator.validateExcel(bindingResult,mockFile);
-            verify(bindingResult,never()).rejectValue(anyString(),anyString(),anyString());
+            assertDoesNotThrow(()->ExcelFileValidator.validateExcel(mockFile),"Expected validateExcel to not throw an exception, but it did");
         }
 
         @Tag("UnitTest")
@@ -53,8 +55,14 @@ public class ExcelFileServiceTest {
         void testExcelFileTooBig() {
             when(mockFile.getSize()).thenReturn(21L*1024*1024);
 
-            ExcelFileValidator.validateExcel(bindingResult,mockFile);
-            verify(bindingResult,times(1)).rejectValue("excelFile","400","Excel file must be less than 20MB");
+            HosterException hosterException = assertThrows(
+                    HosterException.class,
+                    () -> ExcelFileValidator.validateExcel(mockFile),
+                    "Expected validateExcel to throw HosterException, but it didn't"
+            );
+
+            assertEquals(ErrorCode.EXCEL_FILE_TOO_LARGE.toString(), hosterException.getErrorCode(),"Expected error code to be EXCEL_FILE_TOO_LARGE");
+            assertTrue(hosterException.getMessage().contains("Excel file is too large"),"Expected message to contain 'Excel file is too large");
         }
 
         @Tag("UnitTest")
@@ -63,8 +71,14 @@ public class ExcelFileServiceTest {
         void testExcelFileFileNotExcel() {
             when(mockFile.getOriginalFilename()).thenReturn("test.ppt");
 
-            ExcelFileValidator.validateExcel(bindingResult,mockFile);
-            verify(bindingResult,times(1)).rejectValue("excelFile","400","File must be .xls or .xlsx");
+            HosterException hosterException = assertThrows(
+                    HosterException.class,
+                    () -> ExcelFileValidator.validateExcel(mockFile),
+                    "Expected validateExcel to throw HosterException, but it didn't"
+            );
+
+            assertEquals(ErrorCode.INVALID_FIELD.toString(), hosterException.getErrorCode(),"Expected error code to be INVALID_FIELD");
+            assertTrue(hosterException.getMessage().contains("Excel file must be .xls or .xlsx or .txt"),"Expected message to contain 'Excel file must be .xls or .xlsx or .txt");
         }
 
         @Tag("UnitTest")
@@ -72,9 +86,14 @@ public class ExcelFileServiceTest {
         @Test
         void testExcelFileIsNull() {
 
-            ExcelFileValidator.validateExcel(bindingResult,null);
-            verify(bindingResult,times(1)).rejectValue("excelFile","400","excelFile is mandatory");
+            HosterException hosterException = assertThrows(
+                    HosterException.class,
+                    () -> ExcelFileValidator.validateExcel(null),
+                    "Expected validateExcel to throw HosterException, but it didn't"
+            );
 
+            assertEquals(ErrorCode.MISSING_FIELD.toString(), hosterException.getErrorCode(),"Expected error code to be MISSING_FIELD");
+            assertTrue(hosterException.getMessage().contains("Excel file is mandatory"),"Expected message to contain 'Excel file is mandatory");
 
         }
     }

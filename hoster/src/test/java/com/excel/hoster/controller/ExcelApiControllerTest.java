@@ -1,7 +1,6 @@
 package com.excel.hoster.controller;
 
 import com.excel.hoster.domain.ExcelFile;
-import com.excel.hoster.repository.entity.ExcelFileEntity;
 import com.excel.hoster.service.ExcelFileService;
 import com.excel.hoster.repository.ExcelRepository;
 import com.jayway.jsonpath.JsonPath;
@@ -108,7 +107,7 @@ class ExcelApiControllerTest {
                     .getResponse()
                     .getContentAsString();
 
-            String responseMessageFromJson = JsonPath.read(responseJson, "$.responseMessage");
+            String responseMessageFromJson = JsonPath.read(responseJson, "$.detail");
             assertEquals("No Excel found with fullTextId: " + sampleFullTextId,responseMessageFromJson,"If ExcelFile is not found it should give back 404 error with an error message");
 
             verify(excelFileService,times(1)).getExcelFileByFullTextId(sampleFullTextId);
