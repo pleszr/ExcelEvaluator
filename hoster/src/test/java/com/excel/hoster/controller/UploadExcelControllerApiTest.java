@@ -1,6 +1,6 @@
 package com.excel.hoster.controller;
 
-import com.excel.hoster.repository.entity.ExcelFileEntity;
+import com.excel.hoster.domain.ExcelFile;
 import com.excel.hoster.repository.ExcelRepository;
 import com.excel.hoster.service.ExcelFileService;
 import org.junit.jupiter.api.BeforeEach;
@@ -66,7 +66,7 @@ public class UploadExcelControllerApiTest {
                         .param("attributeName", attributeName))
                 .andExpect(status().isOk());
 
-        verify(excelRepository,times(1)).save(any(ExcelFileEntity.class));
+        verify(excelFileService,times(1)).saveExcelFile(any(ExcelFile.class));
     }
 
 

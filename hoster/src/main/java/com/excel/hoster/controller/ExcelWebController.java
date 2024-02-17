@@ -1,8 +1,9 @@
 package com.excel.hoster.controller;
 
-import com.excel.hoster.repository.entity.ExcelFileEntity;
-import com.excel.hoster.dto.ExcelFileDTO;
-import com.excel.hoster.repository.ExcelRepository;
+import com.excel.hoster.domain.ExcelFile;
+import com.excel.hoster.dto.ExcelResponseDTO;
+import com.excel.hoster.dto.UploadExcelRequestDTO;
+import com.excel.hoster.service.ExcelFileService;
 import com.excel.hoster.validator.ExcelFileValidator;
 import jakarta.validation.Valid;
 import lombok.extern.log4j.Log4j2;
@@ -20,11 +21,11 @@ import java.io.IOException;
 @RequestMapping("/web")
 public class ExcelWebController {
 
-    private final ExcelRepository excelRepository;
+    private final ExcelFileService excelFileService;
 
     @Autowired
-    public ExcelWebController(ExcelRepository excelRepository) {
-        this.excelRepository = excelRepository;
+    public ExcelWebController(ExcelFileService excelFileService) {
+        this.excelFileService = excelFileService;
     }
 
 
@@ -32,7 +33,7 @@ public class ExcelWebController {
     @GetMapping("/uploadExcel")
     public String uploadExcelForm(Model model) {
         log.info("Excel file upload form requested");
-        model.addAttribute("excelFileDTO",new ExcelFileDTO());
+        model.addAttribute("excelFileDTO",new UploadExcelRequestDTO());
         return "ExcelUpload";
     }
 
@@ -44,16 +45,21 @@ public class ExcelWebController {
 
     @PostMapping("/uploadExcel")
     public String uploadExcelSubmit(
-            @Valid @ModelAttribute ExcelFileDTO excelFileDTO,
+            @Valid @ModelAttribute UploadExcelRequestDTO uploadExcelRequestDTO,
             @RequestParam(name="file",required = false) MultipartFile file,
             BindingResult bindingResult, Model model) throws IOException {
-        log.info("Excel file upload requested: " + excelFileDTO.toString());
+        log.info("Excel file upload requested: " + uploadExcelRequestDTO.toString());
         ExcelFileValidator.validateExcel(bindingResult,file);
 
-        ExcelFileEntity excelFile = new ExcelFileEntity(excelFileDTO.getDefinitionName(), excelFileDTO.getBrickName(), excelFileDTO.getAttributeName(),file.getOriginalFilename(), file.getBytes());
-        model.addAttribute("excelFile", excelFile);
-        excelRepository.save(excelFile);
-
+        ExcelFile excelFile = new ExcelFile(
+                uploadExcelRequestDTO.getDefinitionName(),
+                uploadExcelRequestDTO.getBrickName(),
+                uploadExcelRequestDTO.getAttributeName(),
+                file.getOriginalFilename(),
+                file.getBytes());
+        ExcelResponseDTO excelResponseDTO = new ExcelResponseDTO(excelFile);
+        model.addAttribute("excelResponseDTO", excelResponseDTO);
+        excelFileService.saveExcelFile(excelFile);
         return "Result";
     }
 

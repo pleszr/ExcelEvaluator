@@ -1,7 +1,9 @@
 package com.excel.hoster.controller;
 
+import com.excel.hoster.domain.ExcelFile;
 import com.excel.hoster.repository.entity.ExcelFileEntity;
 import com.excel.hoster.repository.ExcelRepository;
+import com.excel.hoster.service.ExcelFileService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -48,7 +50,7 @@ public class ExcelWebControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private ExcelRepository excelRepository;
+    private ExcelFileService excelFileService;
 
     @DisplayName("it should give success if the request is correct")
     @Test
@@ -62,7 +64,7 @@ public class ExcelWebControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Excel file uploaded successfully")));
 
-        verify(excelRepository,times(1)).save(any(ExcelFileEntity.class));
+        verify(excelFileService,times(1)).saveExcelFile(any(ExcelFile.class));
     }
 
 
@@ -76,7 +78,7 @@ public class ExcelWebControllerTest {
                         .param("attributeName", attributeName))
                 .andExpect(status().is4xxClientError())
                 .andExpect(content().string(containsString("excelFile is mandatory")));
-        verifyNoInteractions(excelRepository);
+        verifyNoInteractions(excelFileService);
     }
 
     @DisplayName("it should fail if the file is null")
@@ -90,7 +92,7 @@ public class ExcelWebControllerTest {
                         .param("attributeName", attributeName))
                 .andExpect(status().is4xxClientError())
                 .andExpect(content().string(containsString("excelFile is mandatory")));
-        verifyNoInteractions(excelRepository);
+        verifyNoInteractions(excelFileService);
 
     }
 
@@ -104,7 +106,7 @@ public class ExcelWebControllerTest {
                         .param("attributeName", attributeName))
                 .andExpect(status().is4xxClientError())
                 .andExpect(content().string(containsString("brickName is mandatory")));
-        verifyNoInteractions(excelRepository);
+        verifyNoInteractions(excelFileService);
 
     }
 
@@ -119,7 +121,7 @@ public class ExcelWebControllerTest {
                         .param("attributeName", attributeName))
                 .andExpect(status().is4xxClientError())
                 .andExpect(content().string(containsString("brickName is mandatory")));
-        verifyNoInteractions(excelRepository);
+        verifyNoInteractions(excelFileService);
     }
 
     @DisplayName("it should fail if all fields are missing")
@@ -129,7 +131,7 @@ public class ExcelWebControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.multipart("/web/uploadExcel")
                 )
                 .andExpect(status().is4xxClientError());
-        verifyNoInteractions(excelRepository);
+        verifyNoInteractions(excelFileService);
 
     }
 
@@ -143,7 +145,7 @@ public class ExcelWebControllerTest {
                         .param("brickName", "")
                         .param("attributeName", ""))
                 .andExpect(status().is4xxClientError());
-        verifyNoInteractions(excelRepository);
+        verifyNoInteractions(excelFileService);
 
     }
 
@@ -165,7 +167,7 @@ public class ExcelWebControllerTest {
                         .param("attributeName", attributeName))
                 .andExpect(status().is4xxClientError())
                 .andExpect(content().string(containsString("File must be .xls or .xlsx")));
-        verifyNoInteractions(excelRepository);
+        verifyNoInteractions(excelFileService);
 
     }
 
