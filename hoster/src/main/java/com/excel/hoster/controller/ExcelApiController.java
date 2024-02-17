@@ -40,7 +40,7 @@ public class ExcelApiController {
     }
 
     @PostMapping("/uploadExcel")
-    public ResponseEntity<?> uploadExcelSubmit(
+    public ResponseEntity<ExcelResponseDTO> uploadExcelSubmit(
             @Valid @ModelAttribute UploadExcelRequestDTO uploadExcelRequestDTO,
             @RequestParam(name="file",required = false) MultipartFile file)
             throws IOException {
@@ -61,7 +61,7 @@ public class ExcelApiController {
     }
 
     @GetMapping("/getApachePoiVersion")
-    public ResponseEntity<?> getApachePoiVersion(){
+    public ResponseEntity<Map<String,String>> getApachePoiVersion(){
         log.info("Apache POI version requested: " + apachePoiVersion);
         Map<String,String> apachePoiVersionMap = new HashMap<>();
         apachePoiVersionMap.put("apachePoiVersion",apachePoiVersion);
