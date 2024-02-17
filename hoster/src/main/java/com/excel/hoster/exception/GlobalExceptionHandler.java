@@ -5,7 +5,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
@@ -21,11 +20,11 @@ public class GlobalExceptionHandler {
         this.exceptionId = UUID.randomUUID().toString();
     }
 
-    @ExceptionHandler(MissingFieldException.class)
-    ProblemDetail handleMissingFieldException(MissingFieldException missingFieldException) {
-        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, missingFieldException.getMessage());
-        problemDetail.setTitle("Missing field error");
+    @ExceptionHandler(HosterException.class)
+    ProblemDetail handleHosterException(HosterException hosterException) {
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(hosterException.getHttpStatus(), hosterException.getMessage());
         problemDetail.setProperty("exceptionId", exceptionId);
+        problemDetail.setProperty("errorCode", hosterException.getErrorCode());
         return problemDetail;
     }
 
@@ -36,17 +35,9 @@ public class GlobalExceptionHandler {
         String errorMessage = result.getAllErrors().stream()
                 .map(DefaultMessageSourceResolvable::getDefaultMessage)
                 .collect(Collectors.joining(", "));
-
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, errorMessage);
-        problemDetail.setTitle("Missing field error");
         problemDetail.setProperty("exceptionId", exceptionId);
-        return problemDetail;
-    }
-
-    @ExceptionHandler(MissingServletRequestParameterException.class)
-    ProblemDetail handleMissingServletRequestParameterException(MissingServletRequestParameterException missingServletRequestParameterException) {
-        ProblemDetail problemDetail = missingServletRequestParameterException.getBody();
-        problemDetail.setProperty("exceptionId", exceptionId);
+        problemDetail.setProperty("errorCode", ErrorCode.MISSING_FIELD);
         return problemDetail;
     }
 

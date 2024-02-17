@@ -1,42 +1,33 @@
 package com.excel.hoster.validator;
 
-import com.excel.hoster.exception.MissingFieldException;
+import com.excel.hoster.exception.ErrorCode;
+import com.excel.hoster.exception.HosterException;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.util.stream.Collectors;
 
 @Log4j2
 @Service
 public class ExcelFileValidator {
 
-    public static void validateExcel(BindingResult bindingResult, MultipartFile file) {
-        try {
-            String fileName = file.getOriginalFilename();
-            log.info("Excel validation starts for " + fileName );
-            if (!bindingResult.hasErrors() && file.getSize() > 20 * 1024 * 1024) {
-                log.error(fileName + " is larger then 20MB");
-                bindingResult.rejectValue("excelFile", "400", "Excel file must be less than 20MB");
+    public static void validateExcel(MultipartFile file) {
+            if (file == null) {
+                log.error("File is null");
+                throw new HosterException(ErrorCode.MISSING_FIELD,"Excel file is mandatory");
             }
 
-            if (!bindingResult.hasErrors()) {
-                String fileExtension = fileName.substring(fileName.lastIndexOf(".") + 1).toLowerCase();
-                if (!fileExtension.equals("xlsx") && !fileExtension.equals("xls") && !fileExtension.equals("txt")) {
-                    log.error(fileName + " (extension: " + fileExtension + ") is not .xls or .xlsx or .txt");
-                    bindingResult.rejectValue("excelFile", "400", "File must be .xls or .xlsx");
-                }
+            String fileName = file.getOriginalFilename();
+            log.info("Excel validation starts for " + fileName );
+            if (file.getSize() > 20 * 1024 * 1024) {
+                log.error(fileName + " max is 20MB, but received " + file.getSize());
+                throw new HosterException(ErrorCode.EXCEL_FILE_TOO_LARGE, "Excel file is too large. Max size is 20MB, but received " + file.getSize());
+            }
+
+            String fileExtension = fileName.substring(fileName.lastIndexOf(".") + 1).toLowerCase();
+            if (!fileExtension.equals("xlsx") && !fileExtension.equals("xls") && !fileExtension.equals("txt")) {
+                log.error(fileName + " (extension: " + fileExtension + ") is not .xls or .xlsx or .txt");
+                throw new HosterException(ErrorCode.INVALID_FIELD, "Excel file must be .xls or .xlsx or .txt");
             }
         }
-        catch (NullPointerException nullPointerException) {
-            log.error("File is null");
-            bindingResult.rejectValue("excelFile", "400", "excelFile is mandatory");
-        }
-        if (bindingResult.hasErrors()) {
-            String errors = bindingResult.getAllErrors().stream().map(ObjectError::getDefaultMessage).collect(Collectors.joining(", "));
-            throw new MissingFieldException(errors);
-        }
+
     }
-}

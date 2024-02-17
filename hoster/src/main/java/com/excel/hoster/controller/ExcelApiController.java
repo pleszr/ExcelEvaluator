@@ -4,6 +4,8 @@ package com.excel.hoster.controller;
 import com.excel.hoster.domain.ExcelFile;
 import com.excel.hoster.dto.UploadExcelRequestDTO;
 import com.excel.hoster.dto.ExcelResponseDTO;
+import com.excel.hoster.exception.ErrorCode;
+import com.excel.hoster.exception.HosterException;
 import com.excel.hoster.service.ExcelFileService;
 import com.excel.hoster.validator.ExcelFileValidator;
 import jakarta.validation.Valid;
@@ -12,10 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -42,17 +42,12 @@ public class ExcelApiController {
     @PostMapping("/uploadExcel")
     public ResponseEntity<?> uploadExcelSubmit(
             @Valid @ModelAttribute UploadExcelRequestDTO uploadExcelRequestDTO,
-            @RequestParam(name="file",required = false) MultipartFile file,
-            BindingResult bindingResult)
+            @RequestParam(name="file",required = false) MultipartFile file)
             throws IOException {
 
         log.info("Excel file upload requested: " + uploadExcelRequestDTO.toString());
 
-        ExcelFileValidator.validateExcel(bindingResult, file);
-
-        if (bindingResult.hasErrors()) {
-            return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
-        }
+        ExcelFileValidator.validateExcel(file);
 
         ExcelFile excelFile = new ExcelFile(
                 uploadExcelRequestDTO.getDefinitionName(),
@@ -65,7 +60,6 @@ public class ExcelApiController {
         return ResponseEntity.ok(excelResponseDTO);
     }
 
-
     @GetMapping("/getApachePoiVersion")
     public ResponseEntity<?> getApachePoiVersion(){
         log.info("Apache POI version requested: " + apachePoiVersion);
@@ -75,34 +69,29 @@ public class ExcelApiController {
     }
 
     @GetMapping("/getExcelVersion")
-    public ResponseEntity<?> getExcelVersion(
+    public ResponseEntity<ExcelResponseDTO> getExcelVersion(
             @RequestParam(name="fullTextId") String fullTextId) {
 
         log.info("Excel version requested for fullTextId: " + fullTextId);
 
         ExcelFile excelFile = excelFileService.getExcelFileByFullTextId(fullTextId);
         if (excelFile ==null) {
-            Map<String,String> responseMap = new HashMap<>();
-            responseMap.put("responseMessage","No Excel found with fullTextId: " + fullTextId);
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseMap);
+            throw new HosterException(ErrorCode.NOT_FOUND, "No Excel found with fullTextId: " + fullTextId);
         }
         ExcelResponseDTO excelResponseDTO = new ExcelResponseDTO(excelFile);
-
 
         return ResponseEntity.ok(excelResponseDTO);
     }
 
     @GetMapping("/getExcelFile")
-    public ResponseEntity<?> getExcelFile(
+    public ResponseEntity<ByteArrayResource> getExcelFile(
             @RequestParam(name = "fullTextId") String fullTextId) {
 
         log.info("Excel file requested for fullTextId: " + fullTextId);
         ExcelFile excelFile = excelFileService.getExcelFileByFullTextId(fullTextId);
 
         if (excelFile ==null) {
-            Map<String,String> responseMap = new HashMap<>();
-            responseMap.put("responseMessage","No Excel found with fullTextId: " + fullTextId);
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseMap);
+            throw new HosterException(ErrorCode.NOT_FOUND, "No Excel found with fullTextId: " + fullTextId);
         }
 
         byte[] excelFileByteArray = excelFile.getExcelFile();
@@ -118,8 +107,5 @@ public class ExcelApiController {
                 .contentType(MediaType.APPLICATION_OCTET_STREAM)
                 .body(byteArrayResource);
     }
-
-
-
 }
 

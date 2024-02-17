@@ -1,6 +1,7 @@
 package com.excel.hoster.dto;
 
 import com.excel.hoster.domain.ExcelFile;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,6 +12,7 @@ public class ExcelResponseDTO {
     private String attributeName;
     private String fileName;
     private byte[] excelFile;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String version;
     private String fullTextId;
 
