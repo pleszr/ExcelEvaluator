@@ -6,11 +6,11 @@
 </head>
 <body>
 <h1>Excel file uploaded successfully</h1>
-<p th:text="'Version: ' + ${excelFile.version}" />
-<p th:text="'Definition Name: ' + ${excelFile.definitionName}" />
-<p th:text="'Location: ' + ${excelFile.brickName}" />
-<p th:text="'Attribute Name: ' + ${excelFile.attributeName}" />
-<p th:text="'Full Text Id Path: ' + ${excelFile.fullTextId}" />
+<p th:text="'Version: ' + ${excelResponseDTO.version}" />
+<p th:text="'Definition Name: ' + ${excelResponseDTO.definitionName}" />
+<p th:text="'Location: ' + ${excelResponseDTO.brickName}" />
+<p th:text="'Attribute Name: ' + ${excelResponseDTO.attributeName}" />
+<p th:text="'Full Text Id Path: ' + ${excelResponseDTO.fullTextId}" />
 <!-- Displaying the excelFile byte array directly in HTML is not practical, so it's omitted -->
 
 <a href="/web/uploadExcel">Submit another Excel File</a>

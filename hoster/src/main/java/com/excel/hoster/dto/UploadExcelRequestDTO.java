@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
-public class ExcelFileDTO {
+public class UploadExcelRequestDTO {
     @NotBlank(message = "definitionName is mandatory")
     private String definitionName;
     @NotBlank(message = "brickName is mandatory")

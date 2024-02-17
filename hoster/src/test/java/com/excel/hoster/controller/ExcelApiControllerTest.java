@@ -1,5 +1,6 @@
 package com.excel.hoster.controller;
 
+import com.excel.hoster.domain.ExcelFile;
 import com.excel.hoster.repository.entity.ExcelFileEntity;
 import com.excel.hoster.service.ExcelFileService;
 import com.excel.hoster.repository.ExcelRepository;
@@ -28,7 +29,7 @@ class ExcelApiControllerTest {
     String sampleAttributeName;
     String sampleFullTextId;
 
-    ExcelFileEntity mockExcelFile;
+    ExcelFile mockExcelFile;
 
     @BeforeEach
     void init() {
@@ -38,7 +39,7 @@ class ExcelApiControllerTest {
         this.sampleAttributeName = "sampleAttributeName";
         this.sampleFullTextId = "sampleDefName.sampleBrickName.sampleAttributeName";
 
-        mockExcelFile = mock(ExcelFileEntity.class);
+        mockExcelFile = mock(ExcelFile.class);
         when(mockExcelFile.getVersion()).thenReturn(sampleVersion);
         when(mockExcelFile.getDefinitionName()).thenReturn(sampleDefName);
         when(mockExcelFile.getBrickName()).thenReturn(sampleBrickName);
