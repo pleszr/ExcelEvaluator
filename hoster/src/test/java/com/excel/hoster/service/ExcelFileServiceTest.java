@@ -8,7 +8,6 @@ import org.junit.jupiter.api.*;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.validation.BindingResult;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -21,9 +20,6 @@ public class ExcelFileServiceTest {
 
     @Mock
     MockMultipartFile mockFile;
-
-    @Mock
-    private BindingResult bindingResult;
 
     @BeforeEach
     void init() {
