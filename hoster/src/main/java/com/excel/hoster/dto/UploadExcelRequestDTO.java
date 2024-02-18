@@ -1,8 +1,6 @@
 package com.excel.hoster.dto;
 
 import jakarta.validation.constraints.NotBlank;
-import lombok.Getter;
-import lombok.Setter;
 
 public record UploadExcelRequestDTO (
     @NotBlank(message = "definitionName is mandatory")
