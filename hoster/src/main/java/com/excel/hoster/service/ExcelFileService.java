@@ -21,17 +21,18 @@ public class ExcelFileService {
     public ExcelFile getExcelFileByFullTextId(String fullTextId) {
         log.info("Excel file searched for fullTextId: " + fullTextId);
         return excelRepository.findById(fullTextId)
-                .map(ExcelFile::new)
+                .map(ExcelFile::createExcelFileFromEntity)
                 .orElse(null);
     }
 
     public void saveExcelFile(ExcelFile excelFile) {
         ExcelFileEntity excelFileEntity = new ExcelFileEntity(
-                excelFile.getDefinitionName(),
-                excelFile.getBrickName(),
-                excelFile.getAttributeName(),
-                excelFile.getFileName(),
-                excelFile.getExcelFile());
+                excelFile.definitionName(),
+                excelFile.brickName(),
+                excelFile.attributeName(),
+                excelFile.fileName(),
+                excelFile.excelFile()
+        );
         excelRepository.save(excelFileEntity);
     }
 

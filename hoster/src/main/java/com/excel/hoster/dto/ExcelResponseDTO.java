@@ -1,29 +1,27 @@
 package com.excel.hoster.dto;
 
 import com.excel.hoster.domain.ExcelFile;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.Getter;
-import lombok.Setter;
 
-@Getter @Setter
-public class ExcelResponseDTO {
-    private String definitionName;
-    private String brickName;
-    private String attributeName;
-    private String fileName;
-    private byte[] excelFile;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private String version;
-    private String fullTextId;
+public record ExcelResponseDTO (
+    String definitionName,
+    String brickName,
+    String attributeName,
+    String fileName,
+    byte[] excelFile,
+    String version,
+    String fullTextId) {
 
-    public ExcelResponseDTO(ExcelFile excelFile) {
-        this.definitionName = excelFile.getDefinitionName();
-        this.brickName = excelFile.getBrickName();
-        this.attributeName = excelFile.getAttributeName();
-        this.fileName = excelFile.getFileName();
-        this.excelFile = excelFile.getExcelFile();
-        this.version = excelFile.getVersion();
-        this.fullTextId = excelFile.getFullTextId();
+    public static ExcelResponseDTO createFromExcelFile(ExcelFile excelFile) {
+        return new ExcelResponseDTO(
+            excelFile.definitionName(),
+            excelFile.brickName(),
+            excelFile.attributeName(),
+            excelFile.fileName(),
+            excelFile.excelFile(),
+            excelFile.version(),
+            excelFile.fullTextId()
+        );
     }
 }
+
 

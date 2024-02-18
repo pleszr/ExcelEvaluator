@@ -1,35 +1,34 @@
 package com.excel.hoster.domain;
 
 import com.excel.hoster.repository.entity.ExcelFileEntity;
-import lombok.Getter;
-import lombok.Setter;
 
-@Getter @Setter
-public class ExcelFile {
-    private String definitionName;
-    private String brickName;
-    private String attributeName;
-    private String fileName;
-    private byte[] excelFile;
-    private String version;
-    private String fullTextId;
+public record ExcelFile (
+    String definitionName,
+    String brickName,
+    String attributeName,
+    String fileName,
+    byte[] excelFile,
+    String version,
+    String fullTextId) {
 
-    public ExcelFile(String definitionName, String brickName, String attributeName, String fileName, byte[] excelFile) {
-        this.definitionName = definitionName;
-        this.brickName = brickName;
-        this.attributeName = attributeName;
-        this.fileName = fileName;
-        this.excelFile = excelFile;
-        this.fullTextId = definitionName + "." +  brickName + "." + attributeName;
+    public static ExcelFile createExcelFile(String definitionName, String brickName, String attributeName, String fileName, byte[] excelFile) {
+        return new ExcelFile(
+                definitionName,
+                brickName,
+                attributeName,
+                fileName,
+                excelFile,
+                null,
+                definitionName + "." +  brickName + "." + attributeName);
     }
-
-    public ExcelFile(ExcelFileEntity excelFileEntity) {
-        this.definitionName = excelFileEntity.getDefinitionName();
-        this.brickName = excelFileEntity.getBrickName();
-        this.attributeName = excelFileEntity.getAttributeName();
-        this.fileName = excelFileEntity.getFileName();
-        this.excelFile = excelFileEntity.getExcelFile();
-        this.version = excelFileEntity.getVersion();
-        this.fullTextId = excelFileEntity.getFullTextId();
+    public static ExcelFile createExcelFileFromEntity(ExcelFileEntity excelFileEntity) {
+        return new ExcelFile(
+                excelFileEntity.getDefinitionName(),
+                excelFileEntity.getBrickName(),
+                excelFileEntity.getAttributeName(),
+                excelFileEntity.getFileName(),
+                excelFileEntity.getExcelFile(),
+                excelFileEntity.getVersion(),
+                excelFileEntity.getFullTextId());
     }
 }

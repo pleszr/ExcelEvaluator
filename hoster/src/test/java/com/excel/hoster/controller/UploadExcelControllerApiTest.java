@@ -1,7 +1,6 @@
 package com.excel.hoster.controller;
 
 import com.excel.hoster.domain.ExcelFile;
-import com.excel.hoster.repository.ExcelRepository;
 import com.excel.hoster.service.ExcelFileService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -26,13 +25,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(ExcelApiController.class)
 public class UploadExcelControllerApiTest {
     MockMultipartFile mockFile;
-    String definitionName;
-    String brickName;
-    String attributeName;
+    String sampleDefinitionName;
+    String sampleBrickName;
+    String sampleAttributeName;
+    String sampleFullTextId;
+    String sampleVersion;
+
 
 
     @BeforeEach
     public void init() {
+
         mockFile = new MockMultipartFile(
                 "file",
                 "test.xlsx",
@@ -40,30 +43,67 @@ public class UploadExcelControllerApiTest {
                 "<<excel file content>>".getBytes()
         );
 
-        definitionName = "SampleDefinition";
-        brickName = "SampleBrick";
-        attributeName = "SampleAttribute";
+        this.sampleDefinitionName = "SampleDefinition";
+        this.sampleBrickName = "SampleBrick";
+        this.sampleAttributeName = "SampleAttribute";
+        this.sampleFullTextId = sampleDefinitionName + "." + sampleBrickName + "." + sampleAttributeName;
+        this.sampleVersion = "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee";
     }
 
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
-    //it is necessary to mock the excelFileService because it is part of the constructor of the ExcelApiController
     private ExcelFileService excelFileService;
 
-    @MockBean
-    private ExcelRepository excelRepository;
+    private ExcelFile setUpMockExcelFile() {
+        ExcelFile mockExcelFile = mock(ExcelFile.class);
+        when(
+                mockExcelFile.definitionName()
+        )
+                .thenReturn(sampleDefinitionName);
+        when(
+                mockExcelFile.brickName()
+        )
+                .thenReturn(sampleBrickName);
+        when(
+                mockExcelFile.attributeName()
+        )
+                .thenReturn(sampleAttributeName);
+        when(
+                mockExcelFile.fileName()
+        )
+                .thenReturn(mockFile.getOriginalFilename());
+        when(
+                mockExcelFile.excelFile()
+        )
+                .thenReturn("<<excel file content>>".getBytes());
+        when(
+                mockExcelFile.version()
+        )
+                .thenReturn(sampleVersion);
+        when(
+                mockExcelFile.fullTextId()
+        )
+                .thenReturn(sampleFullTextId);
+        return mockExcelFile;
+    }
 
     @DisplayName("it should give success if the request is correct")
     @Test
     void uploadExcelSubmitTest() throws Exception {
 
+        ExcelFile mockExcelFile = setUpMockExcelFile();
+        when(
+                excelFileService.getExcelFileByFullTextId(sampleFullTextId)
+        )
+                .thenReturn(mockExcelFile);
+
         mockMvc.perform(MockMvcRequestBuilders.multipart("/api/uploadExcel")
                         .file(mockFile)
-                        .param("definitionName", definitionName)
-                        .param("brickName", brickName)
-                        .param("attributeName", attributeName))
+                        .param("definitionName", sampleDefinitionName)
+                        .param("brickName", sampleBrickName)
+                        .param("attributeName", sampleAttributeName))
                 .andExpect(status().isOk());
 
         verify(excelFileService,times(1)).saveExcelFile(any(ExcelFile.class));
@@ -75,12 +115,12 @@ public class UploadExcelControllerApiTest {
     void uploadExcelSubmitTestMissingFile() throws Exception {
 
         mockMvc.perform(MockMvcRequestBuilders.multipart("/api/uploadExcel")
-                        .param("definitionName", definitionName)
-                        .param("brickName", brickName)
-                        .param("attributeName", attributeName))
+                        .param("definitionName", sampleDefinitionName)
+                        .param("brickName", sampleBrickName)
+                        .param("attributeName", sampleAttributeName))
                 .andExpect(status().is4xxClientError())
                 .andExpect(content().string(containsString("Excel file is mandatory")));
-        verifyNoInteractions(excelRepository);
+        verifyNoInteractions(excelFileService);
     }
 
     @DisplayName("it should fail if the file is null")
@@ -89,12 +129,12 @@ public class UploadExcelControllerApiTest {
 
         mockMvc.perform(MockMvcRequestBuilders.multipart("/api/uploadExcel")
                         .param("file","")
-                        .param("definitionName", definitionName)
-                        .param("brickName", brickName)
-                        .param("attributeName", attributeName))
+                        .param("definitionName", sampleDefinitionName)
+                        .param("brickName", sampleBrickName)
+                        .param("attributeName", sampleAttributeName))
                 .andExpect(status().is4xxClientError())
                 .andExpect(content().string(containsString("Excel file is mandatory")));
-        verifyNoInteractions(excelRepository);
+        verifyNoInteractions(excelFileService);
 
     }
 
@@ -104,11 +144,11 @@ public class UploadExcelControllerApiTest {
 
         mockMvc.perform(MockMvcRequestBuilders.multipart("/api/uploadExcel")
                         .file(mockFile)
-                        .param("definitionName", definitionName)
-                        .param("attributeName", attributeName))
+                        .param("definitionName", sampleDefinitionName)
+                        .param("attributeName", sampleAttributeName))
                 .andExpect(status().is4xxClientError())
                 .andExpect(content().string(containsString("brickName is mandatory")));
-        verifyNoInteractions(excelRepository);
+        verifyNoInteractions(excelFileService);
 
     }
 
@@ -118,12 +158,12 @@ public class UploadExcelControllerApiTest {
 
         mockMvc.perform(MockMvcRequestBuilders.multipart("/api/uploadExcel")
                         .file(mockFile)
-                        .param("definitionName", definitionName)
+                        .param("definitionName", sampleDefinitionName)
                         .param("brickName", "")
-                        .param("attributeName", attributeName))
+                        .param("attributeName", sampleAttributeName))
                 .andExpect(status().is4xxClientError())
                 .andExpect(content().string(containsString("brickName is mandatory")));
-        verifyNoInteractions(excelRepository);
+        verifyNoInteractions(excelFileService);
     }
 
     @DisplayName("it should fail if all fields are missing")
@@ -133,7 +173,7 @@ public class UploadExcelControllerApiTest {
         mockMvc.perform(MockMvcRequestBuilders.multipart("/api/uploadExcel")
                 )
                 .andExpect(status().is4xxClientError());
-        verifyNoInteractions(excelRepository);
+        verifyNoInteractions(excelFileService);
 
     }
 
@@ -147,7 +187,7 @@ public class UploadExcelControllerApiTest {
                         .param("brickName", "")
                         .param("attributeName", ""))
                 .andExpect(status().is4xxClientError());
-        verifyNoInteractions(excelRepository);
+        verifyNoInteractions(excelFileService);
 
     }
 
@@ -164,12 +204,12 @@ public class UploadExcelControllerApiTest {
 
         mockMvc.perform(MockMvcRequestBuilders.multipart("/api/uploadExcel")
                         .file(invalidMockFile)
-                        .param("definitionName", definitionName)
-                        .param("brickName", brickName)
-                        .param("attributeName", attributeName))
+                        .param("definitionName", sampleDefinitionName)
+                        .param("brickName", sampleBrickName)
+                        .param("attributeName", sampleAttributeName))
                 .andExpect(status().is4xxClientError())
                 .andExpect(content().string(containsString("Excel file must be .xls or .xlsx")));
-        verifyNoInteractions(excelRepository);
+        verifyNoInteractions(excelFileService);
 
     }
 

@@ -39,11 +39,11 @@ class ExcelApiControllerTest {
         this.sampleFullTextId = "sampleDefName.sampleBrickName.sampleAttributeName";
 
         mockExcelFile = mock(ExcelFile.class);
-        when(mockExcelFile.getVersion()).thenReturn(sampleVersion);
-        when(mockExcelFile.getDefinitionName()).thenReturn(sampleDefName);
-        when(mockExcelFile.getBrickName()).thenReturn(sampleBrickName);
-        when(mockExcelFile.getAttributeName()).thenReturn(sampleAttributeName);
-        when(mockExcelFile.getFullTextId()).thenReturn(sampleFullTextId);
+        when(mockExcelFile.version()).thenReturn(sampleVersion);
+        when(mockExcelFile.definitionName()).thenReturn(sampleDefName);
+        when(mockExcelFile.brickName()).thenReturn(sampleBrickName);
+        when(mockExcelFile.attributeName()).thenReturn(sampleAttributeName);
+        when(mockExcelFile.fullTextId()).thenReturn(sampleFullTextId);
     }
 
 
