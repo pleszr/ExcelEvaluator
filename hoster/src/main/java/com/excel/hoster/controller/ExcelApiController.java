@@ -49,14 +49,15 @@ public class ExcelApiController {
 
         ExcelFileValidator.validateExcel(file);
 
-        ExcelFile excelFile = new ExcelFile(
-                uploadExcelRequestDTO.getDefinitionName(),
-                uploadExcelRequestDTO.getBrickName(),
-                uploadExcelRequestDTO.getAttributeName(),
+        ExcelFile excelFile = ExcelFile.createExcelFile(
+                uploadExcelRequestDTO.definitionName(),
+                uploadExcelRequestDTO.brickName(),
+                uploadExcelRequestDTO.attributeName(),
                 file.getOriginalFilename(),
                 file.getBytes());
         excelFileService.saveExcelFile(excelFile);
-        ExcelResponseDTO excelResponseDTO = new ExcelResponseDTO(excelFile);
+        excelFile = excelFileService.getExcelFileByFullTextId(excelFile.fullTextId());
+        ExcelResponseDTO excelResponseDTO = ExcelResponseDTO.createFromExcelFile(excelFile);
         return ResponseEntity.ok(excelResponseDTO);
     }
 
@@ -78,7 +79,7 @@ public class ExcelApiController {
         if (excelFile ==null) {
             throw new HosterException(ErrorCode.NOT_FOUND, "No Excel found with fullTextId: " + fullTextId);
         }
-        ExcelResponseDTO excelResponseDTO = new ExcelResponseDTO(excelFile);
+        ExcelResponseDTO excelResponseDTO = ExcelResponseDTO.createFromExcelFile(excelFile);
 
         return ResponseEntity.ok(excelResponseDTO);
     }
@@ -94,10 +95,10 @@ public class ExcelApiController {
             throw new HosterException(ErrorCode.NOT_FOUND, "No Excel found with fullTextId: " + fullTextId);
         }
 
-        byte[] excelFileByteArray = excelFile.getExcelFile();
+        byte[] excelFileByteArray = excelFile.excelFile();
 
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add(HttpHeaders.CONTENT_DISPOSITION,"attachment; filename=\"" + excelFile.getFileName() + "\"");
+        httpHeaders.add(HttpHeaders.CONTENT_DISPOSITION,"attachment; filename=\"" + excelFile.fileName() + "\"");
 
         ByteArrayResource byteArrayResource = new ByteArrayResource(excelFileByteArray);
 

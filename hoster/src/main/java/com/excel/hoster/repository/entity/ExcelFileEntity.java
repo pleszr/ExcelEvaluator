@@ -51,7 +51,6 @@ public class ExcelFileEntity {
         this.attributeName = attributeName;
         this.excelFile = excelFile;
         this.fileName = fileName;
-        version = UUID.randomUUID().toString();
         this.fullTextId = definitionName + "." +  brickName + "." + attributeName;
         log.info("Excel file created for fullTextId: " + fullTextId);
     }
