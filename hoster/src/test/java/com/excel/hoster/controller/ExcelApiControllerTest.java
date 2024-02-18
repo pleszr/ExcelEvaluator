@@ -43,6 +43,7 @@ class ExcelApiControllerTest {
         when(mockExcelFile.definitionName()).thenReturn(sampleDefName);
         when(mockExcelFile.brickName()).thenReturn(sampleBrickName);
         when(mockExcelFile.attributeName()).thenReturn(sampleAttributeName);
+        when(mockExcelFile.fileName()).thenReturn("test.xlsx");
         when(mockExcelFile.fullTextId()).thenReturn(sampleFullTextId);
     }
 

@@ -2,15 +2,14 @@ package com.excel.hoster.controller;
 
 
 import com.excel.hoster.domain.ExcelFile;
-import com.excel.hoster.dto.UploadExcelRequestDTO;
-import com.excel.hoster.dto.ExcelResponseDTO;
+import com.excel.hoster.dto.UploadExcelRequest;
+import com.excel.hoster.dto.ExcelResponse;
 import com.excel.hoster.exception.ErrorCode;
 import com.excel.hoster.exception.HosterException;
 import com.excel.hoster.service.ExcelFileService;
 import com.excel.hoster.validator.ExcelFileValidator;
 import jakarta.validation.Valid;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
@@ -34,31 +33,30 @@ public class ExcelApiController {
 
     private final ExcelFileService excelFileService;
 
-    @Autowired
     public ExcelApiController(ExcelFileService excelFileService) {
         this.excelFileService = excelFileService;
     }
 
     @PostMapping("/uploadExcel")
-    public ResponseEntity<ExcelResponseDTO> uploadExcelSubmit(
-            @Valid @ModelAttribute UploadExcelRequestDTO uploadExcelRequestDTO,
+    public ResponseEntity<ExcelResponse> uploadExcelSubmit(
+            @Valid @ModelAttribute UploadExcelRequest uploadExcelRequest,
             @RequestParam(name="file",required = false) MultipartFile file)
             throws IOException {
 
-        log.info("Excel file upload requested: " + uploadExcelRequestDTO.toString());
+        log.info("Excel file upload requested: " + uploadExcelRequest.toString());
 
         ExcelFileValidator.validateExcel(file);
 
         ExcelFile excelFile = ExcelFile.createExcelFile(
-                uploadExcelRequestDTO.definitionName(),
-                uploadExcelRequestDTO.brickName(),
-                uploadExcelRequestDTO.attributeName(),
+                uploadExcelRequest.definitionName(),
+                uploadExcelRequest.brickName(),
+                uploadExcelRequest.attributeName(),
                 file.getOriginalFilename(),
                 file.getBytes());
         excelFileService.saveExcelFile(excelFile);
         excelFile = excelFileService.getExcelFileByFullTextId(excelFile.fullTextId());
-        ExcelResponseDTO excelResponseDTO = ExcelResponseDTO.createFromExcelFile(excelFile);
-        return ResponseEntity.ok(excelResponseDTO);
+        ExcelResponse excelResponse = ExcelResponse.createFromExcelFile(excelFile);
+        return ResponseEntity.ok(excelResponse);
     }
 
     @GetMapping("/getApachePoiVersion")
@@ -70,7 +68,7 @@ public class ExcelApiController {
     }
 
     @GetMapping("/getExcelVersion")
-    public ResponseEntity<ExcelResponseDTO> getExcelVersion(
+    public ResponseEntity<ExcelResponse> getExcelVersion(
             @RequestParam(name="fullTextId") String fullTextId) {
 
         log.info("Excel version requested for fullTextId: " + fullTextId);
@@ -79,9 +77,9 @@ public class ExcelApiController {
         if (excelFile ==null) {
             throw new HosterException(ErrorCode.NOT_FOUND, "No Excel found with fullTextId: " + fullTextId);
         }
-        ExcelResponseDTO excelResponseDTO = ExcelResponseDTO.createFromExcelFile(excelFile);
+        ExcelResponse excelResponse = ExcelResponse.createFromExcelFile(excelFile);
 
-        return ResponseEntity.ok(excelResponseDTO);
+        return ResponseEntity.ok(excelResponse);
     }
 
     @GetMapping("/getExcelFile")
