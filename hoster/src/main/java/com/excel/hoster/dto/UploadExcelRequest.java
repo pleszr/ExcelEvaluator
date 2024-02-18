@@ -2,7 +2,7 @@ package com.excel.hoster.dto;
 
 import jakarta.validation.constraints.NotBlank;
 
-public record UploadExcelRequestDTO (
+public record UploadExcelRequest(
     @NotBlank(message = "definitionName is mandatory")
     String definitionName,
     @NotBlank(message = "brickName is mandatory")

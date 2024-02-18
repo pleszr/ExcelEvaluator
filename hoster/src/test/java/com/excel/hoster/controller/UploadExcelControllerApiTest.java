@@ -58,34 +58,13 @@ public class UploadExcelControllerApiTest {
 
     private ExcelFile setUpMockExcelFile() {
         ExcelFile mockExcelFile = mock(ExcelFile.class);
-        when(
-                mockExcelFile.definitionName()
-        )
-                .thenReturn(sampleDefinitionName);
-        when(
-                mockExcelFile.brickName()
-        )
-                .thenReturn(sampleBrickName);
-        when(
-                mockExcelFile.attributeName()
-        )
-                .thenReturn(sampleAttributeName);
-        when(
-                mockExcelFile.fileName()
-        )
-                .thenReturn(mockFile.getOriginalFilename());
-        when(
-                mockExcelFile.excelFile()
-        )
-                .thenReturn("<<excel file content>>".getBytes());
-        when(
-                mockExcelFile.version()
-        )
-                .thenReturn(sampleVersion);
-        when(
-                mockExcelFile.fullTextId()
-        )
-                .thenReturn(sampleFullTextId);
+        when(mockExcelFile.definitionName()).thenReturn(sampleDefinitionName);
+        when(mockExcelFile.brickName()).thenReturn(sampleBrickName);
+        when(mockExcelFile.attributeName()).thenReturn(sampleAttributeName);
+        when(mockExcelFile.fileName()).thenReturn(mockFile.getOriginalFilename());
+        when(mockExcelFile.excelFile()).thenReturn("<<excel file content>>".getBytes());
+        when(mockExcelFile.version()).thenReturn(sampleVersion);
+        when(mockExcelFile.fullTextId()).thenReturn(sampleFullTextId);
         return mockExcelFile;
     }
 
@@ -94,9 +73,7 @@ public class UploadExcelControllerApiTest {
     void uploadExcelSubmitTest() throws Exception {
 
         ExcelFile mockExcelFile = setUpMockExcelFile();
-        when(
-                excelFileService.getExcelFileByFullTextId(sampleFullTextId)
-        )
+        when(excelFileService.getExcelFileByFullTextId(sampleFullTextId))
                 .thenReturn(mockExcelFile);
 
         mockMvc.perform(MockMvcRequestBuilders.multipart("/api/uploadExcel")

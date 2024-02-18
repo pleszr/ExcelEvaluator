@@ -3,13 +3,13 @@ package com.excel.hoster.domain;
 import com.excel.hoster.repository.entity.ExcelFileEntity;
 
 public record ExcelFile (
-    String definitionName,
-    String brickName,
-    String attributeName,
-    String fileName,
-    byte[] excelFile,
-    String version,
-    String fullTextId) {
+        String definitionName,
+        String brickName,
+        String attributeName,
+        String fileName,
+        byte[] excelFile,
+        String version,
+        String fullTextId) {
 
     public static ExcelFile createExcelFile(String definitionName, String brickName, String attributeName, String fileName, byte[] excelFile) {
         return new ExcelFile(
