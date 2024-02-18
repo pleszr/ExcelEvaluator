@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
@@ -21,9 +22,7 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@Tag("IntegrationTest")
-@DisplayName("When uploading an Excel file via API")
-@WebMvcTest(ExcelApiController.class)
+@SpringBootTest
 public class UploadExcelControllerApiTest {
     MockMultipartFile mockFile;
     String definitionName;
@@ -55,7 +54,6 @@ public class UploadExcelControllerApiTest {
     @MockBean
     private ExcelRepository excelRepository;
 
-    @DisplayName("it should give success if the request is correct")
     @Test
     void uploadExcelSubmitTest() throws Exception {
 
@@ -66,27 +64,32 @@ public class UploadExcelControllerApiTest {
                         .param("attributeName", attributeName))
                 .andExpect(status().isOk());
 
-        verify(excelFileService,times(1)).saveExcelFile(any(ExcelFile.class));
+        verify(excelFileService).saveExcelFile(any(ExcelFile.class));
     }
 
 
     @DisplayName("it should fail if the file is missing")
     @Test
     void uploadExcelSubmitTestMissingFile() throws Exception {
-
         mockMvc.perform(MockMvcRequestBuilders.multipart("/api/uploadExcel")
                         .param("definitionName", definitionName)
                         .param("brickName", brickName)
                         .param("attributeName", attributeName))
-                .andExpect(status().is4xxClientError())
-                .andExpect(content().string(containsString("Excel file is mandatory")));
+                .andExpect(
+                    status().isBadRequest()
+                )
+                .andExpect(
+                    content().string(
+                        containsString("Excel file is mandatory")
+                    )
+                );
+
         verifyNoInteractions(excelRepository);
     }
 
     @DisplayName("it should fail if the file is null")
     @Test
     void uploadExcelSubmitTestFileIsNull() throws Exception {
-
         mockMvc.perform(MockMvcRequestBuilders.multipart("/api/uploadExcel")
                         .param("file","")
                         .param("definitionName", definitionName)
@@ -94,8 +97,8 @@ public class UploadExcelControllerApiTest {
                         .param("attributeName", attributeName))
                 .andExpect(status().is4xxClientError())
                 .andExpect(content().string(containsString("Excel file is mandatory")));
-        verifyNoInteractions(excelRepository);
 
+        verifyNoInteractions(excelRepository);
     }
 
     @DisplayName("it should fail if the brickName is missing")

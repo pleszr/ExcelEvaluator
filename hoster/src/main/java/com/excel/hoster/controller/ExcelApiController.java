@@ -23,7 +23,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-
 @RestController
 @RequestMapping("/api")
 @Log4j2
