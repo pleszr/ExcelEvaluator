@@ -1,0 +1,20 @@
+server:
+  port: 8081
+
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: update
+    #show-sql: true
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/db_example
+    username: springuser
+    password: ThePassword
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+#Custom Properties
+apache:
+  poi:
+    version: 4.1.2
+
+
