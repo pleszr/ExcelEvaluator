@@ -13,8 +13,6 @@ import java.util.UUID;
 @Entity @Getter @Log4j2
 public class ExcelFileEntity {
 
-    private String version;
-
     @NotBlank(message = "definitionName is mandatory")
     @Setter
     private String definitionName;
@@ -27,12 +25,14 @@ public class ExcelFileEntity {
     @NotBlank(message = "attributeName is mandatory")
     private String attributeName;
 
+    @Id
+    private String fullTextId;
+
+    private String version;
+
     @Setter
     @NotBlank(message = "file name is mandatory")
     private String fileName;
-
-    @Id
-    private String fullTextId;
 
     @Setter
     @JsonIgnore
@@ -49,9 +49,12 @@ public class ExcelFileEntity {
         this.definitionName = definitionName;
         this.brickName = brickName;
         this.attributeName = attributeName;
+        this.fullTextId = definitionName + "." +  brickName + "." + attributeName;
         this.excelFile = excelFile;
         this.fileName = fileName;
-        this.fullTextId = definitionName + "." +  brickName + "." + attributeName;
+
+        calcNewVersion();
+
         log.info("Excel file created for fullTextId: " + fullTextId);
     }
 
@@ -60,9 +63,7 @@ public class ExcelFileEntity {
         fullTextId = definitionName + "." +  brickName + "." + attributeName;
     }
 
-    @PrePersist
-    @PreUpdate
-    private void saveOrUpdate() {
+    public void calcNewVersion() {
         version = UUID.randomUUID().toString();
     }
 }

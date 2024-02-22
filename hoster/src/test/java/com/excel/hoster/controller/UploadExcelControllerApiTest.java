@@ -25,11 +25,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(ExcelApiController.class)
 public class UploadExcelControllerApiTest {
     MockMultipartFile mockFile;
-    String sampleDefinitionName;
-    String sampleBrickName;
-    String sampleAttributeName;
-    String sampleFullTextId;
-    String sampleVersion;
+    String defaultSampleDefinitionName;
+    String defaultSampleBrickName;
+    String defaultSampleAttributeName;
+    String defaultSampleFullTextId;
+    String defaultSampleVersion;
 
 
 
@@ -43,11 +43,11 @@ public class UploadExcelControllerApiTest {
                 "<<excel file content>>".getBytes()
         );
 
-        this.sampleDefinitionName = "SampleDefinition";
-        this.sampleBrickName = "SampleBrick";
-        this.sampleAttributeName = "SampleAttribute";
-        this.sampleFullTextId = sampleDefinitionName + "." + sampleBrickName + "." + sampleAttributeName;
-        this.sampleVersion = "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee";
+        this.defaultSampleDefinitionName = "SampleDefinition";
+        this.defaultSampleBrickName = "SampleBrick";
+        this.defaultSampleAttributeName = "SampleAttribute";
+        this.defaultSampleFullTextId = defaultSampleDefinitionName + "." + defaultSampleBrickName + "." + defaultSampleAttributeName;
+        this.defaultSampleVersion = "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee";
     }
 
     @Autowired
@@ -58,13 +58,13 @@ public class UploadExcelControllerApiTest {
 
     private ExcelFile setUpMockExcelFile() {
         ExcelFile mockExcelFile = mock(ExcelFile.class);
-        when(mockExcelFile.definitionName()).thenReturn(sampleDefinitionName);
-        when(mockExcelFile.brickName()).thenReturn(sampleBrickName);
-        when(mockExcelFile.attributeName()).thenReturn(sampleAttributeName);
+        when(mockExcelFile.definitionName()).thenReturn(defaultSampleDefinitionName);
+        when(mockExcelFile.brickName()).thenReturn(defaultSampleBrickName);
+        when(mockExcelFile.attributeName()).thenReturn(defaultSampleAttributeName);
         when(mockExcelFile.fileName()).thenReturn(mockFile.getOriginalFilename());
         when(mockExcelFile.excelFile()).thenReturn("<<excel file content>>".getBytes());
-        when(mockExcelFile.version()).thenReturn(sampleVersion);
-        when(mockExcelFile.fullTextId()).thenReturn(sampleFullTextId);
+        when(mockExcelFile.version()).thenReturn(defaultSampleVersion);
+        when(mockExcelFile.fullTextId()).thenReturn(defaultSampleFullTextId);
         return mockExcelFile;
     }
 
@@ -73,14 +73,14 @@ public class UploadExcelControllerApiTest {
     void uploadExcelSubmitTest() throws Exception {
 
         ExcelFile mockExcelFile = setUpMockExcelFile();
-        when(excelFileService.getExcelFileByFullTextId(sampleFullTextId))
+        when(excelFileService.getExcelFileByFullTextId(defaultSampleFullTextId))
                 .thenReturn(mockExcelFile);
 
         mockMvc.perform(MockMvcRequestBuilders.multipart("/api/uploadExcel")
                         .file(mockFile)
-                        .param("definitionName", sampleDefinitionName)
-                        .param("brickName", sampleBrickName)
-                        .param("attributeName", sampleAttributeName))
+                        .param("definitionName", defaultSampleDefinitionName)
+                        .param("brickName", defaultSampleBrickName)
+                        .param("attributeName", defaultSampleAttributeName))
                 .andExpect(status().isOk());
 
         verify(excelFileService,times(1)).saveExcelFile(any(ExcelFile.class));
@@ -92,9 +92,9 @@ public class UploadExcelControllerApiTest {
     void uploadExcelSubmitTestMissingFile() throws Exception {
 
         mockMvc.perform(MockMvcRequestBuilders.multipart("/api/uploadExcel")
-                        .param("definitionName", sampleDefinitionName)
-                        .param("brickName", sampleBrickName)
-                        .param("attributeName", sampleAttributeName))
+                        .param("definitionName", defaultSampleDefinitionName)
+                        .param("brickName", defaultSampleBrickName)
+                        .param("attributeName", defaultSampleAttributeName))
                 .andExpect(status().is4xxClientError())
                 .andExpect(content().string(containsString("Excel file is mandatory")));
         verifyNoInteractions(excelFileService);
@@ -106,9 +106,9 @@ public class UploadExcelControllerApiTest {
 
         mockMvc.perform(MockMvcRequestBuilders.multipart("/api/uploadExcel")
                         .param("file","")
-                        .param("definitionName", sampleDefinitionName)
-                        .param("brickName", sampleBrickName)
-                        .param("attributeName", sampleAttributeName))
+                        .param("definitionName", defaultSampleDefinitionName)
+                        .param("brickName", defaultSampleBrickName)
+                        .param("attributeName", defaultSampleAttributeName))
                 .andExpect(status().is4xxClientError())
                 .andExpect(content().string(containsString("Excel file is mandatory")));
         verifyNoInteractions(excelFileService);
@@ -121,8 +121,8 @@ public class UploadExcelControllerApiTest {
 
         mockMvc.perform(MockMvcRequestBuilders.multipart("/api/uploadExcel")
                         .file(mockFile)
-                        .param("definitionName", sampleDefinitionName)
-                        .param("attributeName", sampleAttributeName))
+                        .param("definitionName", defaultSampleDefinitionName)
+                        .param("attributeName", defaultSampleAttributeName))
                 .andExpect(status().is4xxClientError())
                 .andExpect(content().string(containsString("brickName is mandatory")));
         verifyNoInteractions(excelFileService);
@@ -135,9 +135,9 @@ public class UploadExcelControllerApiTest {
 
         mockMvc.perform(MockMvcRequestBuilders.multipart("/api/uploadExcel")
                         .file(mockFile)
-                        .param("definitionName", sampleDefinitionName)
+                        .param("definitionName", defaultSampleDefinitionName)
                         .param("brickName", "")
-                        .param("attributeName", sampleAttributeName))
+                        .param("attributeName", defaultSampleAttributeName))
                 .andExpect(status().is4xxClientError())
                 .andExpect(content().string(containsString("brickName is mandatory")));
         verifyNoInteractions(excelFileService);
@@ -181,15 +181,11 @@ public class UploadExcelControllerApiTest {
 
         mockMvc.perform(MockMvcRequestBuilders.multipart("/api/uploadExcel")
                         .file(invalidMockFile)
-                        .param("definitionName", sampleDefinitionName)
-                        .param("brickName", sampleBrickName)
-                        .param("attributeName", sampleAttributeName))
+                        .param("definitionName", defaultSampleDefinitionName)
+                        .param("brickName", defaultSampleBrickName)
+                        .param("attributeName", defaultSampleAttributeName))
                 .andExpect(status().is4xxClientError())
                 .andExpect(content().string(containsString("Excel file must be .xls or .xlsx")));
         verifyNoInteractions(excelFileService);
-
     }
-
-
-
 }

@@ -7,20 +7,21 @@ public record ExcelResponse(
     @NonNull String definitionName,
     @NonNull String brickName,
     @NonNull String attributeName,
-    @NonNull String fileName,
-    byte[] excelFile,
+    @NonNull String fullTextId,
     String version,
-    @NonNull String fullTextId) {
+    @NonNull String fileName,
+    byte[] excelFile
+    ) {
 
     public static ExcelResponse createFromExcelFile(ExcelFile excelFile) {
         return new ExcelResponse(
             excelFile.definitionName(),
             excelFile.brickName(),
             excelFile.attributeName(),
-            excelFile.fileName(),
-            excelFile.excelFile(),
+            excelFile.fullTextId(),
             excelFile.version(),
-            excelFile.fullTextId()
+            excelFile.fileName(),
+            excelFile.excelFile()
         );
     }
 }
