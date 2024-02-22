@@ -7,6 +7,8 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Log4j2
 @Service
 public class ExcelFileService {
@@ -20,7 +22,7 @@ public class ExcelFileService {
 
     public ExcelFile getExcelFileByFullTextId(String fullTextId) {
         log.info("Excel file searched for fullTextId: " + fullTextId);
-        return excelRepository.findById(fullTextId)
+        return excelRepository.findExcelEntityByFullTextId(fullTextId)
                 .map(ExcelFile::createExcelFileFromEntity)
                 .orElse(null);
     }
@@ -33,7 +35,14 @@ public class ExcelFileService {
                 excelFile.fileName(),
                 excelFile.excelFile()
         );
-        excelRepository.save(excelFileEntity);
+        excelRepository.saveOrUpdateExcelFileEntity(
+                excelFileEntity.getDefinitionName(),
+                excelFileEntity.getBrickName(),
+                excelFileEntity.getAttributeName(),
+                excelFileEntity.getFullTextId(),
+                UUID.randomUUID().toString(),
+                excelFileEntity.getFileName(),
+                excelFileEntity.getExcelFile());
     }
 
 

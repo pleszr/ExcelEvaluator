@@ -6,29 +6,30 @@ public record ExcelFile (
         String definitionName,
         String brickName,
         String attributeName,
-        String fileName,
-        byte[] excelFile,
+        String fullTextId,
         String version,
-        String fullTextId) {
+        String fileName,
+        byte[] excelFile
+        ) {
 
     public static ExcelFile createExcelFile(String definitionName, String brickName, String attributeName, String fileName, byte[] excelFile) {
         return new ExcelFile(
                 definitionName,
                 brickName,
                 attributeName,
-                fileName,
-                excelFile,
+                definitionName + "." +  brickName + "." + attributeName,
                 null,
-                definitionName + "." +  brickName + "." + attributeName);
+                fileName,
+                excelFile);
     }
     public static ExcelFile createExcelFileFromEntity(ExcelFileEntity excelFileEntity) {
         return new ExcelFile(
                 excelFileEntity.getDefinitionName(),
                 excelFileEntity.getBrickName(),
                 excelFileEntity.getAttributeName(),
-                excelFileEntity.getFileName(),
-                excelFileEntity.getExcelFile(),
+                excelFileEntity.getFullTextId(),
                 excelFileEntity.getVersion(),
-                excelFileEntity.getFullTextId());
+                excelFileEntity.getFileName(),
+                excelFileEntity.getExcelFile());
     }
 }
