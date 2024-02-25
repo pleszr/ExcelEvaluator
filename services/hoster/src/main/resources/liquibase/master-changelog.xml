@@ -4,8 +4,8 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
 
-    <include file="sql/01-create-excel_file_entity-table.sql" relativeToChangelogFile="true"/>
-    <include file="sql/02-create-testTable.sql" relativeToChangelogFile="true"/>
+    <include file="../db/migrations/v1.0.0/V001__create_excel_file_table.sql" relativeToChangelogFile="true"/>
+    <include file="../db/migrations/v1.0.0/V002__create_userTable.sql" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>
 

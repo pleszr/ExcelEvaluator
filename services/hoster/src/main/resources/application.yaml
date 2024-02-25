@@ -3,11 +3,10 @@ server:
 
 spring:
   liquibase:
-    change-log: classpath:liquibase/master-changelog.xml
+    change-log: classpath:db/changelog/db-changelog-master.yaml
   jpa:
     hibernate:
       ddl-auto: update
-    #show-sql: true
   datasource:
     url: jdbc:mysql://127.0.0.1:3306/db_example
     username: springuser
