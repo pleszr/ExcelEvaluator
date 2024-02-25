@@ -2,15 +2,15 @@ server:
   port: 8081
 spring:
   liquibase:
-    change-log: classpath:db/changelog/db-changelog-master.yaml
+    change-log: classpath:liquibase/master-changelog.xml
   jpa:
     hibernate:
       ddl-auto: update
     #show-sql: true
   datasource:
-    url: ${MYSQL_URL}
-    username: ${MYSQL_USER}
-    password: ${MYSQL_PASSWORD}
+    url: ${MYSQL_URL:jdbc:mysql://127.0.0.1:3306/db_example}
+    username: ${MYSQL_USER:springuser}
+    password: ${MYSQL_PASSWORD:ThePassword}
     driver-class-name: com.mysql.cj.jdbc.Driver
 logging:
   level:
