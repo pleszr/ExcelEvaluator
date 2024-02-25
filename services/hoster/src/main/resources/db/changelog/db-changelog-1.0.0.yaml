@@ -1,0 +1,22 @@
+databaseChangeLog:
+  - logicalFilePath: "classpath:/db/changelog/db.changelog-master.yaml"
+  - changeSet:
+      id: V001
+      comment: create excel file table
+      author: rplesz
+      changes:
+        - sqlFile:
+            path: /db/migrations/v1.0.0/V001__create_excel_file_table.sql
+  -  changeSet:
+      id: V002
+      comment: create user table
+      author: rplesz
+      changes:
+        - sqlFile:
+            path: /db/migrations/v1.0.0/V002__create_userTable.sql
+
+
+
+
+
+
