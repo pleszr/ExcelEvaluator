@@ -2,6 +2,8 @@ server:
   port: 8081
 
 spring:
+  liquibase:
+    change-log: classpath:liquibase/master-changelog.xml
   jpa:
     hibernate:
       ddl-auto: update
@@ -11,6 +13,9 @@ spring:
     username: springuser
     password: ThePassword
     driver-class-name: com.mysql.cj.jdbc.Driver
+logging:
+  level:
+    liquibase: DEBUG
 
 #Custom Properties
 apache:
