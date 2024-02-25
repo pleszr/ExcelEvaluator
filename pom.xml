@@ -11,7 +11,7 @@
         <relativePath/>
     </parent>
 
-    <groupId>com.pleszr</groupId>
+    <groupId>com.rplesz</groupId>
     <artifactId>excel-evaluator</artifactId>
     <version>0.0.1-SNAPSHOT</version>
 
