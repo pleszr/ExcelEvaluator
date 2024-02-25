@@ -11,7 +11,7 @@
 
 	<artifactId>evaluator</artifactId>
 	<name>evaluator</name>
-	<description>Hosts Excel files. Can be used with Excel Evaluator.</description>
+	<description>Evaluates Excel files</description>
 	<properties>
 		<java.version>17</java.version>
 	</properties>
