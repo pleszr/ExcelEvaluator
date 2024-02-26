@@ -1,6 +1,6 @@
 -- liquibase formatted sql
 
-CREATE TABLE IF NOT EXISTS userRepository (
+CREATE TABLE IF NOT EXISTS user_table (
     full_text_id VARCHAR(255) NOT NULL PRIMARY KEY,
     attribute_name VARCHAR(255),
     brick_name VARCHAR(255),
